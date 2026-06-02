@@ -286,7 +286,7 @@ button{cursor:pointer;font-family:inherit}input,select,textarea{font-family:inhe
 <div class="overlay" id="editClsModal" onclick="bgClose(event,'editClsModal')">
  <div class="modal"><div class="mhd"><span class="mhd-t" id="editClsTitle">Nouvelle classe</span><button class="mx" onclick="closeModal('editClsModal')">✕</button></div>
   <div class="mbody">
-   <div class="fg"><label>Nom de la classe *</label><input id="cls_name" placeholder="ex : 2nde PRO MELEC"></div>
+   <div class="fg"><label>Nom de la classe *</label><input id="cls_name" placeholder="ex : 2nde ... / Term ... / CAP ..."></div>
    <div class="fg2">
     <div class="fg"><label>Niveau *</label><select id="cls_level">
       <option value="troisieme">3ème Prépa Métiers</option>
@@ -298,8 +298,8 @@ button{cursor:pointer;font-family:inherit}input,select,textarea{font-family:inhe
     <div class="fg"><label>Année scolaire</label><input  id="cls_year" placeholder="année en cours" </div>
    </div>
    <div class="fg2">
-    <div class="fg"><label>Établissement</label><input id="cls_etab" placeholder="Lycée Victor Hugo"></div>
-    <div class="fg"><label>Enseignant(e)</label><input id="cls_teacher" placeholder="M. Dupont"></div>
+    <div class="fg"><label>Établissement</label><input id="cls_etab" placeholder="votre établissement"></div>
+    <div class="fg"><label>Enseignant(e)</label><input id="cls_teacher" placeholder="votre nom"></div>
    </div>
    <div class="fg"><label>Couleur</label><div class="cpick" id="colorPicker"></div></div>
    <input type="hidden" id="cls_editId">
