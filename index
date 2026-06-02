@@ -268,9 +268,8 @@ button{cursor:pointer;font-family:inherit}input,select,textarea{font-family:inhe
     <button class="sb-ftl" onclick="openModal('privModal')">🔒 Politique de confidentialité</button>
     <button class="sb-ftl" onclick="openModal('licModal')">📜 Licence</button>
     <div class="sb-cred">
-      <a href="https://www.linkedin.com/in/tomrougeaud/" target="_blank" rel="noopener">Tom Rougeaud</a>
+      <a href=""https://tom-rougeaud.github.io/casier-tom-rougeaud" target="_blank" rel="noopener" style="opacity:.8">//Tom Rougeaud</a>
       <span>·</span>
-      <a href="https://tom-rougeaud.github.io/casier-tom-rougeaud" target="_blank" rel="noopener" style="opacity:.7">//Tom Rougeaud</a>
     </div>
   </div>
 </aside>
@@ -403,7 +402,7 @@ button{cursor:pointer;font-family:inherit}input,select,textarea{font-family:inhe
    <h3>Progression Maths en Lycée Pro</h3><p>© 2026 Tom Rougeaud. Tous droits réservés sauf dispositions ci-dessous.</p>
    <h3>Droits accordés</h3><ul><li>Utilisation personnelle et professionnelle (enseignants, établissements) — gratuite</li><li>Copie et distribution entre enseignants à titre non commercial</li></ul>
    <h3>Restrictions</h3><ul><li><b>Toute utilisation commerciale est interdite</b> sans autorisation écrite</li><li>Suppression des mentions d'auteur interdite</li></ul>
-   <h3>Contact</h3><p><a href="https://www.linkedin.com/in/tomrougeaud/" target="_blank" rel="noopener">linkedin.com/in/tomrougeaud</a></p>
+   <h3>Contact</h3><p><a href="https://www.linkedin.com/in/tomrougeaud/" target="_blank" rel="noopener">Tom Rougeaud</a></p>
   </div>
   <div class="mft"><button class="mb mb-s" onclick="closeModal('licModal')">Fermer</button></div>
  </div>
