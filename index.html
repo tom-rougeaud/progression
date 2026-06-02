@@ -754,7 +754,7 @@ function renderMod(cid,domId,mod,col){
     +'<div class="mc-bw"><div class="mc-b" id="mcb_'+mod.id+'" style="width:'+p+'%;background:'+col+'"></div></div></div>'
     +'<div class="mc-rt">'
     +'<span class="mc-pct" id="mcpct_'+mod.id+'" style="color:'+col+'">'+p+'%</span>'
-    +'<button class="mc-all" onclick="event.stopPropagation();checkAllMod(\''+cid+'\',\''+domId+'\',\''+mod.id+'\')" title="Marquer tout le module comme Maîtrisé">✓ Maîtrisé</button>'
+    +'<button class="mc-all" onclick="event.stopPropagation();checkAllMod(\''+cid+'\',\''+domId+'\',\''+mod.id+'\')" title="Marquer tout le module comme Maîtrisé">Tout cocher ✓</button>'
     +'<button class="ev-btn'+(isEv?' on':'')+'" id="evbtn_'+mod.id+'" onclick="event.stopPropagation();toggleEval(\''+cid+'\',\''+mod.id+'\')">'+(isEv?'✓':'○')+' Évalué</button>'
     +'<button class="mc-act" onclick="event.stopPropagation();renameModule(\''+cid+'\',\''+mod.id+'\')" title="Renommer">✏️</button>'
     +'<button class="mc-act del" onclick="event.stopPropagation();delModule(\''+cid+'\',\''+mod.id+'\')" title="Supprimer">🗑</button>'
