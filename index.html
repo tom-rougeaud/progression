@@ -283,6 +283,12 @@ button{cursor:pointer;font-family:inherit}input,select,textarea{font-family:inhe
 </div>
 
 <!-- CLASS MODAL -->
+<style>
+  /* Ce style s'applique à tous les placeholders dans la modale */
+  #editClsModal input::placeholder {
+    font-style: italic;
+  }
+</style>
 <div class="overlay" id="editClsModal" onclick="bgClose(event,'editClsModal')">
  <div class="modal"><div class="mhd"><span class="mhd-t" id="editClsTitle">Nouvelle classe</span><button class="mx" onclick="closeModal('editClsModal')">✕</button></div>
   <div class="mbody">
