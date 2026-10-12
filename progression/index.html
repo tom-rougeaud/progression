@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi Progression — Maths/Sciences/Techno</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Hamburger mobile -->
+<button class="btn-ham" id="btn-ham" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+
+<!-- Sidebar overlay (mobile) -->
+<div id="sb-overlay" style="display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.35);" onclick="toggleSidebar()"></div>
+
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">📚 Progression<span>Maths · Sciences · Techno</span></div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Mes classes</div>
+    <div id="sb-classes"><!-- injecté --></div>
+    <button class="sb-add" onclick="openClassModal()">＋ Nouvelle classe</button>
+  </div>
+
+  <div class="sb-footer">
+    <div class="sb-user" id="sb-user"><!-- injecté --></div>
+    <button class="btn-logout" onclick="doLogout()">Déconnexion</button>
+  </div>
+</aside>
+
+<!-- ===== MAIN ===== -->
+<main class="main" id="main">
+
+  <!-- État vide : pas de classe -->
+  <div id="empty-state" style="display:none">
+    <div class="empty">
+      <div class="empty-icon">🎒</div>
+      <div class="empty-title">Bienvenue !</div>
+      <p>Créez votre première classe pour commencer le suivi.</p>
+      <br>
+      <button class="btn-save" onclick="openClassModal()">＋ Créer une classe</button>
+    </div>
+  </div>
+
+  <!-- Vue principale (classe sélectionnée) -->
+  <div id="class-view" style="display:none">
+    <div class="topbar">
+      <div class="topbar-title" id="class-title">Classe <span id="class-meta"></span></div>
+      <div class="chip-row">
+        <button class="chip" onclick="editClass()">✏️ Modifier</button>
+        <button class="chip" onclick="openEvalModal()">📝 Évaluation</button>
+        <button class="chip" onclick="deleteClassConfirm()">🗑️ Supprimer</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="stats-row"><!-- injecté --></div>
+
+    <!-- Onglets -->
+    <div class="page-tabs">
+      <button class="page-tab active" id="tab-prog"  onclick="switchTab('prog')">Programme</button>
+      <button class="page-tab"        id="tab-evals" onclick="switchTab('evals')">Évaluations</button>
+    </div>
+
+    <!-- Programme -->
+    <div id="view-prog">
+      <div id="accordion"><!-- injecté --></div>
+    </div>
+
+    <!-- Évaluations -->
+    <div id="view-evals" style="display:none">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+        <button class="btn-save" onclick="openEvalModal()">＋ Nouvelle évaluation</button>
+      </div>
+      <div id="evals-list"><!-- injecté --></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== MODALS ===== -->
+
+<!-- Modal : créer/modifier classe -->
+<div class="modal-backdrop" id="modal-class">
+  <div class="modal">
+    <h2><button class="modal-close" onclick="closeModal('modal-class')">×</button><span id="modal-class-title">Nouvelle classe</span></h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nom de la classe *</label>
+        <input type="text" id="cl-nom" placeholder="Ex : 2B, Groupe 1…" required>
+      </div>
+      <div class="form-group">
+        <label>Niveau *</label>
+        <select id="cl-niveau">
+          <option value="troisieme_pm">3ème Prépa-Métiers</option>
+          <option value="cap">CAP</option>
+          <option value="seconde">2nde Pro</option>
+          <option value="premiere">1ère Pro</option>
+          <option value="terminale">Terminale Pro</option>
+          <option value="upe2a">UPE2A</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Année scolaire</label>
+        <input type="text" id="cl-annee" value="2025-2026">
+      </div>
+      <div class="form-group">
+        <label>Matière</label>
+        <select id="cl-matiere">
+          <option value="maths">Mathématiques</option>
+          <option value="pc">Physique-Chimie</option>
+          <option value="techno">Technologie</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Couleur</label>
+      <div class="color-row" id="color-row">
+        <div class="color-opt selected" style="background:#4f46e5" data-color="#4f46e5" onclick="selectColor(this)"></div>
+        <div class="color-opt" style="background:#7c3aed" data-color="#7c3aed" onclick="selectColor(this)"></div>
+        <div class="color-opt" style="background:#db2777" data-color="#db2777" onclick="selectColor(this)"></div>
+        <div class="color-opt" style="background:#dc2626" data-color="#dc2626" onclick="selectColor(this)"></div>
+        <div class="color-opt" style="background:#d97706" data-color="#d97706" onclick="selectColor(this)"></div>
+        <div class="color-opt" style="background:#059669" data-color="#059669" onclick="selectColor(this)"></div>
+        <div class="color-opt" style="background:#0284c7" data-color="#0284c7" onclick="selectColor(this)"></div>
+        <div class="color-opt" style="background:#475569" data-color="#475569" onclick="selectColor(this)"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-class')">Annuler</button>
+      <button class="btn-save" onclick="saveClass()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal : saisie date + temps pour un item -->
+<div class="modal-backdrop" id="modal-item">
+  <div class="modal" style="max-width:400px">
+    <h2><button class="modal-close" onclick="closeModal('modal-item')">×</button>Progression de l'item</h2>
+    <div id="modal-item-label" style="font-size:.9rem;color:var(--txt2);margin-bottom:1rem;font-style:italic;"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Statut</label>
+        <select id="item-statut">
+          <option value="nc">Non commencé</option>
+          <option value="enc">En cours</option>
+          <option value="rev">En révision</option>
+          <option value="ok">Maîtrisé ✓</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date de réalisation</label>
+        <input type="date" id="item-date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Temps consacré</label>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <input type="number" id="item-temps-h" min="0" max="20" placeholder="h" style="width:70px">
+        <span style="color:var(--txt2)">h</span>
+        <input type="number" id="item-temps-m" min="0" max="59" placeholder="min" style="width:80px">
+        <span style="color:var(--txt2)">min</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-item')">Annuler</button>
+      <button class="btn-save" onclick="saveItemModal()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal : groupes d'items (chapitre) -->
+<div class="modal-backdrop" id="modal-bulk">
+  <div class="modal" style="max-width:420px">
+    <h2><button class="modal-close" onclick="closeModal('modal-bulk')">×</button>Mettre à jour le chapitre</h2>
+    <div id="modal-bulk-label" style="font-size:.9rem;color:var(--txt2);margin-bottom:1rem;font-style:italic;"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Statut pour tous les items</label>
+        <select id="bulk-statut">
+          <option value="nc">Non commencé</option>
+          <option value="enc">En cours</option>
+          <option value="rev">En révision</option>
+          <option value="ok">Maîtrisé ✓</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date de réalisation</label>
+        <input type="date" id="bulk-date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Temps total pour ce chapitre</label>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <input type="number" id="bulk-temps-h" min="0" max="99" placeholder="h" style="width:70px">
+        <span style="color:var(--txt2)">h</span>
+        <input type="number" id="bulk-temps-m" min="0" max="59" placeholder="min" style="width:80px">
+        <span style="color:var(--txt2)">min</span>
+      </div>
+      <div id="bulk-temps-hint" style="font-size:.75rem;color:var(--txt2);margin-top:.35rem;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-bulk')">Annuler</button>
+      <button class="btn-save" onclick="saveBulkModal()">Appliquer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal : créer/modifier évaluation -->
+<div class="modal-backdrop" id="modal-eval">
+  <div class="modal">
+    <h2><button class="modal-close" onclick="closeModal('modal-eval')">×</button><span id="modal-eval-title">Nouvelle évaluation</span></h2>
+    <div class="form-row">
+      <div class="form-group" style="flex:2">
+        <label>Titre de l'évaluation</label>
+        <input type="text" id="eval-titre" placeholder="Ex : DS n°1 — Fractions" required>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="eval-date" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Items évalués <small style="color:var(--txt2)">(cochez les compétences travaillées)</small></label>
+      <div style="margin-bottom:.5rem;display:flex;gap:.5rem;">
+        <input type="text" id="eval-search" placeholder="Rechercher un item…" oninput="filterEvalItems()" style="flex:1;padding:.45rem .75rem;border:1.5px solid var(--border);border-radius:8px;font-size:.85rem;background:var(--bg);color:var(--txt);outline:none;">
+        <button class="btn-sm" onclick="toggleAllEvalItems(true)">Tout cocher</button>
+        <button class="btn-sm" onclick="toggleAllEvalItems(false)">Tout décocher</button>
+      </div>
+      <div class="eval-items-list" id="eval-items-picker"><!-- injecté --></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-eval')">Annuler</button>
+      <button class="btn-save" onclick="saveEval()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Scripts -->
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="curriculum.js"></script>
+<script>
+// ========== INIT ==========
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+let USER = null, PROFILE = null;
+let CLASSES = [], CURRENT_CLASS = null;
+let PROGRESS = {};   // { item_key: { statut, date_realisation, temps_minutes } }
+let EVALS = [];      // list of evaluations with .items[]
+let EDITING_CLASS_ID = null;
+let EDITING_EVAL_ID  = null;
+let ITEM_MODAL_KEY   = null;
+let BULK_MODAL_KEYS  = [];
+
+async function init() {
+  const { data:{ session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'auth.html'; return; }
+  USER = session.user;
+  await loadProfile();
+  await loadClasses();
+  renderSidebar();
+  if (CLASSES.length === 0) {
+    document.getElementById('empty-state').style.display = '';
+  } else {
+    await selectClass(CLASSES[0].id);
+  }
+}
+
+// ========== PROFILE ==========
+async function loadProfile() {
+  const { data } = await sb.from('profiles').select('*').eq('id', USER.id).single();
+  PROFILE = data || { nom: USER.email, etablissement: '' };
+  const el = document.getElementById('sb-user');
+  el.innerHTML = `<strong>${PROFILE.nom||USER.email}</strong>${PROFILE.etablissement||''}`;
+}
+
+// ========== CLASSES ==========
+async function loadClasses() {
+  const { data } = await sb.from('classes').select('*').order('created_at');
+  CLASSES = data || [];
+}
+
+function renderSidebar() {
+  const el = document.getElementById('sb-classes');
+  el.innerHTML = CLASSES.map(c => `
+    <button class="sb-class${CURRENT_CLASS?.id===c.id?' active':''}" onclick="selectClass('${c.id}')">
+      <span class="dot" style="background:${c.couleur}"></span>
+      <span>${c.nom}</span>
+      <small style="margin-left:auto;font-size:.72rem;opacity:.7">${CURRICULUM[c.niveau]?.label||c.niveau}</small>
+    </button>
+  `).join('');
+}
+
+async function selectClass(id) {
+  CURRENT_CLASS = CLASSES.find(c=>c.id===id);
+  if (!CURRENT_CLASS) return;
+  document.getElementById('empty-state').style.display   = 'none';
+  document.getElementById('class-view').style.display    = '';
+  document.getElementById('class-title').textContent     = CURRENT_CLASS.nom;
+  document.getElementById('class-meta').textContent      = `— ${CURRICULUM[CURRENT_CLASS.niveau]?.label||''} · ${CURRENT_CLASS.annee}`;
+  renderSidebar();
+  await loadProgress();
+  await loadEvals();
+  renderAccordion();
+  renderStats();
+  renderEvals();
+  switchTab('prog');
+}
+
+// ========== PROGRESS ==========
+async function loadProgress() {
+  const { data } = await sb.from('progress').select('*').eq('class_id', CURRENT_CLASS.id);
+  PROGRESS = {};
+  (data||[]).forEach(r => { PROGRESS[r.item_key] = r; });
+}
+
+async function setItemProgress(key, statut, dateStr, tempsMins) {
+  const payload = {
+    class_id: CURRENT_CLASS.id,
+    item_key: key,
+    statut,
+    date_realisation: dateStr || null,
+    temps_minutes: tempsMins || 0,
+    updated_at: new Date().toISOString()
+  };
+  const { data, error } = await sb.from('progress').upsert(payload, { onConflict: 'class_id,item_key' }).select().single();
+  if (!error && data) PROGRESS[key] = data;
+  renderStats();
+  // Re-render only the item row
+  const row = document.querySelector(`[data-item-key="${key}"]`);
+  if (row) updateItemRow(row, key);
+}
+
+// ========== ACCORDION ==========
+function renderAccordion() {
+  const cur = CURRICULUM[CURRENT_CLASS.niveau];
+  if (!cur) { document.getElementById('accordion').innerHTML='<p>Programme non disponible.</p>'; return; }
+  const html = cur.themes.map(th => {
+    const allItems = th.chapitres.flatMap(ch => ch.items.map((_,i)=>`${ch.id}_${i}`));
+    const done = allItems.filter(k=>PROGRESS[k]?.statut==='ok').length;
+    return `
+    <div class="theme-block">
+      <div class="theme-header" onclick="toggleTheme('${th.id}')">
+        <span class="theme-icone">${th.icone}</span>
+        <span class="theme-name">${th.label}</span>
+        <span class="theme-badge">${done}/${allItems.length} maîtrisés</span>
+        <span class="theme-arrow" id="tarr-${th.id}">▶</span>
+      </div>
+      <div class="theme-body" id="tbody-${th.id}">
+        ${th.chapitres.map(ch => renderChapitre(ch)).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('accordion').innerHTML = html;
+}
+
+function renderChapitre(ch) {
+  const keys = ch.items.map((_,i)=>`${ch.id}_${i}`);
+  const done = keys.filter(k=>PROGRESS[k]?.statut==='ok').length;
+  const pct  = keys.length ? Math.round(done/keys.length*100) : 0;
+  return `
+  <div class="chapitre-block">
+    <div class="chapitre-header" onclick="toggleCh('${ch.id}')">
+      <span class="ch-name">${ch.nom}</span>
+      <span class="ch-prog">${done}/${keys.length} · ${pct}%</span>
+      <span class="ch-arrow" id="charr-${ch.id}">▶</span>
+    </div>
+    <div class="ch-body" id="chbody-${ch.id}">
+      <div class="ch-actions">
+        <button class="btn-sm ok" onclick="openBulkModal('${ch.id}', event)">✓ Tout maîtriser</button>
+        <button class="btn-sm"    onclick="openBulkModal('${ch.id}', event, 'enc')">⟳ Tout démarrer</button>
+        <button class="btn-sm"    onclick="openBulkModal('${ch.id}', event, 'nc')">↺ Tout réinitialiser</button>
+      </div>
+      ${ch.items.map((item, i) => renderItemRow(ch.id, item, i)).join('')}
+    </div>
+  </div>`;
+}
+
+function renderItemRow(chId, itemLabel, idx) {
+  const key = `${chId}_${idx}`;
+  const p   = PROGRESS[key];
+  const st  = p?.statut || 'nc';
+  const dateStr = p?.date_realisation ? fmtDate(p.date_realisation) : '';
+  const tempsStr = p?.temps_minutes ? fmtMins(p.temps_minutes) : '';
+  const inEval = EVALS.some(e => e.items?.some(it => it.item_key === key));
+
+  const statusIcons = { nc:'○', enc:'◐', rev:'↻', ok:'✓' };
+  const statuses = ['nc','enc','rev','ok'];
+  const statusBtns = statuses.map(s =>
+    `<button class="status-btn ${s}${st===s?' active':''}" title="${statusLabel(s)}"
+      onclick="quickSetStatus('${key}', '${s}', event)">${statusIcons[s]}</button>`
+  ).join('');
+
+  return `<div class="item-row" data-item-key="${key}">
+    <div class="item-status">${statusBtns}</div>
+    <span class="item-label" onclick="openItemModal('${key}', '${escHtml(itemLabel)}')" style="cursor:pointer" title="Cliquez pour modifier la date/temps">${itemLabel}</span>
+    ${inEval ? `<span class="item-eval-dot" title="Dans une évaluation"></span>` : ''}
+    ${dateStr  ? `<span class="item-date">📅 ${dateStr}</span>` : ''}
+    ${tempsStr ? `<span class="item-time">⏱ ${tempsStr}</span>` : ''}
+    <button class="status-btn" style="border:none;background:none;color:var(--txt2)" onclick="openItemModal('${key}', '${escHtml(itemLabel)}')" title="Modifier">✎</button>
+  </div>`;
+}
+
+function updateItemRow(row, key) {
+  const chId = key.split('_').slice(0,-1).join('_');
+  const idx  = parseInt(key.split('_').pop());
+  const cur  = CURRICULUM[CURRENT_CLASS.niveau];
+  if (!cur) return;
+  let itemLabel = '';
+  cur.themes.forEach(th => th.chapitres.forEach(ch => { if(ch.id===chId && ch.items[idx]) itemLabel=ch.items[idx]; }));
+  const newRow = document.createElement('div');
+  newRow.innerHTML = renderItemRow(chId, itemLabel, idx);
+  row.replaceWith(newRow.firstElementChild);
+  // Update chapter header counts
+  updateChapterHeader(chId);
+  renderStats();
+}
+
+function updateChapterHeader(chId) {
+  const cur = CURRICULUM[CURRENT_CLASS.niveau];
+  if (!cur) return;
+  cur.themes.forEach(th => th.chapitres.forEach(ch => {
+    if (ch.id !== chId) return;
+    const keys = ch.items.map((_,i)=>`${ch.id}_${i}`);
+    const done = keys.filter(k=>PROGRESS[k]?.statut==='ok').length;
+    const pct  = keys.length ? Math.round(done/keys.length*100) : 0;
+    const el = document.querySelector(`#chbody-${chId}`)?.previousElementSibling?.querySelector('.ch-prog');
+    if (el) el.textContent = `${done}/${keys.length} · ${pct}%`;
+  }));
+}
+
+function toggleTheme(id) {
+  const body = document.getElementById('tbody-'+id);
+  const arr  = document.getElementById('tarr-'+id);
+  body.classList.toggle('open'); arr.classList.toggle('open');
+}
+function toggleCh(id) {
+  const body = document.getElementById('chbody-'+id);
+  const arr  = document.getElementById('charr-'+id);
+  body.classList.toggle('open'); arr.classList.toggle('open');
+}
+
+// ========== STATS ==========
+function renderStats() {
+  const cur = CURRICULUM[CURRENT_CLASS.niveau];
+  if (!cur) return;
+  const allKeys = cur.themes.flatMap(th => th.chapitres.flatMap(ch => ch.items.map((_,i)=>`${ch.id}_${i}`)));
+  const total   = allKeys.length;
+  const ok  = allKeys.filter(k=>PROGRESS[k]?.statut==='ok').length;
+  const enc = allKeys.filter(k=>PROGRESS[k]?.statut==='enc').length;
+  const rev = allKeys.filter(k=>PROGRESS[k]?.statut==='rev').length;
+  const pct = total ? Math.round(ok/total*100) : 0;
+  const totalMins = Object.values(PROGRESS).reduce((s,p)=>s+(p.temps_minutes||0),0);
+
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Progression</div>
+      <div class="stat-val">${pct}%</div>
+      <div class="stat-sub">${ok}/${total} items maîtrisés</div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">En cours</div>
+      <div class="stat-val" style="color:var(--enc)">${enc}</div>
+      <div class="stat-sub">items démarrés</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">En révision</div>
+      <div class="stat-val" style="color:var(--rev)">${rev}</div>
+      <div class="stat-sub">items à revoir</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Temps total</div>
+      <div class="stat-val" style="font-size:1.3rem">${fmtMins(totalMins)}</div>
+      <div class="stat-sub">${EVALS.length} éval${EVALS.length>1?'s':''}</div>
+    </div>`;
+}
+
+// ========== QUICK STATUS ==========
+async function quickSetStatus(key, statut, e) {
+  e.stopPropagation();
+  // Si on passe en 'ok' ou autre statut actif, on propose la date/temps
+  if (statut !== 'nc') {
+    openItemModal(key, '', statut);
+  } else {
+    await setItemProgress(key, 'nc', null, 0);
+  }
+}
+
+// ========== MODAL ITEM ==========
+function openItemModal(key, label, defaultStatut) {
+  ITEM_MODAL_KEY = key;
+  const p = PROGRESS[key] || {};
+  document.getElementById('modal-item-label').textContent = label || '…';
+  document.getElementById('item-statut').value = defaultStatut || p.statut || 'nc';
+  document.getElementById('item-date').value   = p.date_realisation || '';
+  const mins = p.temps_minutes || 0;
+  document.getElementById('item-temps-h').value = Math.floor(mins/60) || '';
+  document.getElementById('item-temps-m').value = (mins%60) || '';
+  openModal('modal-item');
+}
+
+async function saveItemModal() {
+  const statut   = document.getElementById('item-statut').value;
+  const dateStr  = document.getElementById('item-date').value || null;
+  const h = parseInt(document.getElementById('item-temps-h').value)||0;
+  const m = parseInt(document.getElementById('item-temps-m').value)||0;
+  const mins = h*60 + m;
+  closeModal('modal-item');
+  await setItemProgress(ITEM_MODAL_KEY, statut, dateStr, mins);
+  toast('Item mis à jour ✓');
+}
+
+// ========== MODAL BULK ==========
+function openBulkModal(chId, e, defaultStatut) {
+  e.stopPropagation();
+  const cur = CURRICULUM[CURRENT_CLASS.niveau];
+  let ch = null;
+  cur.themes.forEach(th => th.chapitres.forEach(c => { if(c.id===chId) ch=c; }));
+  if (!ch) return;
+  BULK_MODAL_KEYS = ch.items.map((_,i)=>`${chId}_${i}`);
+  document.getElementById('modal-bulk-label').textContent = ch.nom + ` (${BULK_MODAL_KEYS.length} items)`;
+  document.getElementById('bulk-statut').value = defaultStatut || 'ok';
+  document.getElementById('bulk-date').value   = '';
+  document.getElementById('bulk-temps-h').value = '';
+  document.getElementById('bulk-temps-m').value = '';
+  document.getElementById('bulk-temps-hint').textContent = '';
+
+  // Update hint dynamically
+  const updateHint = () => {
+    const h = parseInt(document.getElementById('bulk-temps-h').value)||0;
+    const m = parseInt(document.getElementById('bulk-temps-m').value)||0;
+    const total = h*60+m;
+    if (total > 0 && BULK_MODAL_KEYS.length > 0) {
+      const perItem = Math.round(total / BULK_MODAL_KEYS.length);
+      document.getElementById('bulk-temps-hint').textContent = `→ ${fmtMins(perItem)} par item`;
+    } else {
+      document.getElementById('bulk-temps-hint').textContent = '';
+    }
+  };
+  document.getElementById('bulk-temps-h').oninput = updateHint;
+  document.getElementById('bulk-temps-m').oninput = updateHint;
+  openModal('modal-bulk');
+}
+
+async function saveBulkModal() {
+  const statut  = document.getElementById('bulk-statut').value;
+  const dateStr = document.getElementById('bulk-date').value || null;
+  const h = parseInt(document.getElementById('bulk-temps-h').value)||0;
+  const m = parseInt(document.getElementById('bulk-temps-m').value)||0;
+  const totalMins = h*60 + m;
+  const perItem   = BULK_MODAL_KEYS.length > 0 ? Math.round(totalMins / BULK_MODAL_KEYS.length) : 0;
+  closeModal('modal-bulk');
+
+  const payloads = BULK_MODAL_KEYS.map(key => ({
+    class_id: CURRENT_CLASS.id, item_key: key,
+    statut, date_realisation: dateStr, temps_minutes: perItem,
+    updated_at: new Date().toISOString()
+  }));
+  const { data } = await sb.from('progress').upsert(payloads, { onConflict:'class_id,item_key' }).select();
+  (data||[]).forEach(r => { PROGRESS[r.item_key] = r; });
+  renderAccordion();
+  renderStats();
+  toast(`${BULK_MODAL_KEYS.length} items mis à jour ✓`);
+}
+
+// ========== ÉVALUATIONS ==========
+async function loadEvals() {
+  const { data: evs } = await sb.from('evaluations').select('*').eq('class_id', CURRENT_CLASS.id).order('date_eval', {ascending:false});
+  if (!evs) { EVALS = []; return; }
+  const ids = evs.map(e=>e.id);
+  let itemMap = {};
+  if (ids.length > 0) {
+    const { data: eitems } = await sb.from('evaluation_items').select('*').in('evaluation_id', ids);
+    (eitems||[]).forEach(it => {
+      if (!itemMap[it.evaluation_id]) itemMap[it.evaluation_id] = [];
+      itemMap[it.evaluation_id].push(it);
+    });
+  }
+  EVALS = evs.map(e => ({ ...e, items: itemMap[e.id] || [] }));
+}
+
+function renderEvals() {
+  const el = document.getElementById('evals-list');
+  if (!EVALS.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📝</div><div class="empty-title">Aucune évaluation</div><p>Créez votre première évaluation pour y associer des items.</p></div>`;
+    return;
+  }
+  el.innerHTML = EVALS.map(ev => {
+    const nbItems = ev.items?.length || 0;
+    const chipSample = (ev.items||[]).slice(0,5).map(it => {
+      const key = it.item_key; const chId = key.split('_').slice(0,-1).join('_'); const idx = parseInt(key.split('_').pop());
+      const cur = CURRICULUM[CURRENT_CLASS.niveau];
+      let label = '';
+      cur?.themes.forEach(th => th.chapitres.forEach(ch => { if(ch.id===chId && ch.items[idx]) label=ch.items[idx]; }));
+      return `<span class="eval-item-chip" title="${label}">${label.slice(0,30)}${label.length>30?'…':''}</span>`;
+    }).join('');
+    return `<div class="eval-card">
+      <div class="eval-card-icon">📝</div>
+      <div class="eval-card-body">
+        <div class="eval-card-title">${ev.titre}</div>
+        <div class="eval-card-meta">📅 ${fmtDate(ev.date_eval)} · ${nbItems} item${nbItems>1?'s':''} évalué${nbItems>1?'s':''}</div>
+        ${nbItems ? `<div class="eval-card-items">${chipSample}${nbItems>5?`<span class="eval-item-chip">+${nbItems-5} autres</span>`:''}</div>` : ''}
+      </div>
+      <div class="eval-card-acts">
+        <button class="btn-sm" onclick="openEvalModal('${ev.id}')">✏️</button>
+        <button class="btn-sm" style="color:var(--danger)" onclick="deleteEval('${ev.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openEvalModal(evalId) {
+  EDITING_EVAL_ID = evalId || null;
+  const ev = evalId ? EVALS.find(e=>e.id===evalId) : null;
+  document.getElementById('modal-eval-title').textContent = ev ? 'Modifier l\'évaluation' : 'Nouvelle évaluation';
+  document.getElementById('eval-titre').value = ev?.titre || '';
+  document.getElementById('eval-date').value  = ev?.date_eval || '';
+  document.getElementById('eval-search').value = '';
+  buildEvalItemsPicker(ev?.items?.map(i=>i.item_key)||[]);
+  openModal('modal-eval');
+}
+
+function buildEvalItemsPicker(checkedKeys=[]) {
+  const cur = CURRICULUM[CURRENT_CLASS.niveau];
+  if (!cur) return;
+  const rows = [];
+  cur.themes.forEach(th => {
+    rows.push(`<div style="padding:.4rem .75rem;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--txt2);background:var(--bg)">${th.icone} ${th.label}</div>`);
+    th.chapitres.forEach(ch => {
+      ch.items.forEach((item, i) => {
+        const key = `${ch.id}_${i}`;
+        const checked = checkedKeys.includes(key) ? 'checked' : '';
+        rows.push(`<label class="eval-item-row" data-item-key="${key}" data-label="${escHtml(item.toLowerCase())}">
+          <input type="checkbox" value="${key}" ${checked}>
+          <span><span class="eval-item-label">${item}</span><span class="eval-item-cat">${ch.nom}</span></span>
+        </label>`);
+      });
+    });
+  });
+  document.getElementById('eval-items-picker').innerHTML = rows.join('');
+}
+
+function filterEvalItems() {
+  const q = document.getElementById('eval-search').value.toLowerCase();
+  document.querySelectorAll('#eval-items-picker .eval-item-row').forEach(row => {
+    row.style.display = (!q || row.dataset.label?.includes(q)) ? '' : 'none';
+  });
+}
+
+function toggleAllEvalItems(val) {
+  document.querySelectorAll('#eval-items-picker input[type=checkbox]').forEach(cb => {
+    const row = cb.closest('.eval-item-row');
+    if (!row || row.style.display === 'none') return;
+    cb.checked = val;
+  });
+}
+
+async function saveEval() {
+  const titre   = document.getElementById('eval-titre').value.trim();
+  const dateStr = document.getElementById('eval-date').value;
+  if (!titre || !dateStr) { toast('Titre et date requis', 'err'); return; }
+  const checked = [...document.querySelectorAll('#eval-items-picker input[type=checkbox]:checked')].map(cb=>cb.value);
+
+  let evalId = EDITING_EVAL_ID;
+  if (evalId) {
+    // Update
+    await sb.from('evaluations').update({ titre, date_eval: dateStr }).eq('id', evalId);
+    await sb.from('evaluation_items').delete().eq('evaluation_id', evalId);
+  } else {
+    const { data } = await sb.from('evaluations').insert({ class_id: CURRENT_CLASS.id, titre, date_eval: dateStr }).select().single();
+    evalId = data.id;
+  }
+  if (checked.length) {
+    await sb.from('evaluation_items').insert(checked.map(k=>({ evaluation_id: evalId, item_key: k })));
+  }
+  closeModal('modal-eval');
+  await loadEvals();
+  renderEvals();
+  renderAccordion(); // pour mettre à jour les points violets
+  toast('Évaluation enregistrée ✓');
+}
+
+async function deleteEval(id) {
+  if (!confirm('Supprimer cette évaluation ?')) return;
+  await sb.from('evaluations').delete().eq('id', id);
+  EVALS = EVALS.filter(e=>e.id!==id);
+  renderEvals();
+  renderAccordion();
+  toast('Évaluation supprimée');
+}
+
+// ========== CLASSES CRUD ==========
+function openClassModal(id) {
+  EDITING_CLASS_ID = id || null;
+  const cl = id ? CLASSES.find(c=>c.id===id) : null;
+  document.getElementById('modal-class-title').textContent = cl ? 'Modifier la classe' : 'Nouvelle classe';
+  document.getElementById('cl-nom').value    = cl?.nom    || '';
+  document.getElementById('cl-niveau').value = cl?.niveau || 'seconde';
+  document.getElementById('cl-annee').value  = cl?.annee  || '2025-2026';
+  document.getElementById('cl-matiere').value= cl?.matiere|| 'maths';
+  const col = cl?.couleur || '#4f46e5';
+  document.querySelectorAll('.color-opt').forEach(el => {
+    el.classList.toggle('selected', el.dataset.color === col);
+  });
+  openModal('modal-class');
+}
+
+function editClass() { openClassModal(CURRENT_CLASS?.id); }
+
+async function saveClass() {
+  const nom     = document.getElementById('cl-nom').value.trim();
+  const niveau  = document.getElementById('cl-niveau').value;
+  const annee   = document.getElementById('cl-annee').value.trim();
+  const matiere = document.getElementById('cl-matiere').value;
+  const couleur = document.querySelector('.color-opt.selected')?.dataset.color || '#4f46e5';
+  if (!nom) { toast('Le nom est requis', 'err'); return; }
+
+  if (EDITING_CLASS_ID) {
+    const { data } = await sb.from('classes').update({ nom, niveau, annee, matiere, couleur }).eq('id', EDITING_CLASS_ID).select().single();
+    CLASSES = CLASSES.map(c => c.id===EDITING_CLASS_ID ? data : c);
+    if (CURRENT_CLASS?.id === EDITING_CLASS_ID) CURRENT_CLASS = data;
+  } else {
+    const { data } = await sb.from('classes').insert({ teacher_id: USER.id, nom, niveau, annee, matiere, couleur }).select().single();
+    CLASSES.push(data);
+    CURRENT_CLASS = data;
+    document.getElementById('empty-state').style.display = 'none';
+    document.getElementById('class-view').style.display  = '';
+  }
+  closeModal('modal-class');
+  await selectClass(CURRENT_CLASS.id);
+  toast('Classe enregistrée ✓');
+}
+
+async function deleteClassConfirm() {
+  if (!confirm(`Supprimer la classe "${CURRENT_CLASS?.nom}" et toutes ses données ?`)) return;
+  await sb.from('classes').delete().eq('id', CURRENT_CLASS.id);
+  CLASSES = CLASSES.filter(c => c.id !== CURRENT_CLASS.id);
+  CURRENT_CLASS = null;
+  renderSidebar();
+  if (CLASSES.length > 0) { await selectClass(CLASSES[0].id); }
+  else {
+    document.getElementById('class-view').style.display  = 'none';
+    document.getElementById('empty-state').style.display = '';
+  }
+  toast('Classe supprimée');
+}
+
+// ========== UI HELPERS ==========
+function selectColor(el) {
+  document.querySelectorAll('.color-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function switchTab(t) {
+  document.getElementById('view-prog').style.display  = t==='prog'  ? '' : 'none';
+  document.getElementById('view-evals').style.display = t==='evals' ? '' : 'none';
+  document.getElementById('tab-prog').classList.toggle('active',  t==='prog');
+  document.getElementById('tab-evals').classList.toggle('active', t==='evals');
+}
+
+function toggleSidebar() {
+  const sb  = document.getElementById('sidebar');
+  const ov  = document.getElementById('sb-overlay');
+  const open = sb.classList.toggle('open');
+  ov.style.display = open ? '' : 'none';
+}
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function toast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (type==='err' ? ' error' : '');
+  if (type==='err') el.style.background='var(--danger)'; else el.style.background='#1e293b';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function statusLabel(s) { return { nc:'Non commencé', enc:'En cours', rev:'En révision', ok:'Maîtrisé' }[s]||s; }
+
+function fmtDate(d) {
+  if (!d) return '';
+  const [y,m,day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+
+function fmtMins(mins) {
+  if (!mins) return '0 min';
+  const h = Math.floor(mins/60), m = mins%60;
+  if (h && m) return `${h}h${String(m).padStart(2,'0')}`;
+  if (h) return `${h}h`;
+  return `${m} min`;
+}
+
+function escHtml(s) { return (s||'').replace(/'/g,'\\\'').replace(/"/g,'&quot;'); }
+
+// Fermer les modals au clic sur le backdrop
+document.querySelectorAll('.modal-backdrop').forEach(bd => {
+  bd.addEventListener('click', e => { if(e.target===bd) closeModal(bd.id); });
+});
+
+// Démarrage
+init();
+</script>
+</body>
+</html>
