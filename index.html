@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data: blob:; font-src data:; connect-src https://zfqzvwpjxmrlctxsmxch.supabase.co; base-uri 'none'; form-action 'none'">
 <title>Suivi de Progression — Mathématiques · Sciences · Techno</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzFhNWZhNSIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjMTY2NTM0Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjN2MzYWVkIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iOCIgZmlsbD0idXJsKCNnKSIvPjx0ZXh0IHg9IjciIHk9IjIzIiBmb250LXNpemU9IjE4IiBmb250LWZhbWlseT0iQXJpYWwiPvCfk4o8L3RleHQ+PC9zdmc+">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>:root{
   /* Palette générale */
   --bg-main:#f0ebe0;--bg-hdr:#e8f1ff;--bg-sb:#f7f6f2;
@@ -540,6 +540,12 @@ a{color:var(--m)}
 .tm-row .fg{flex:1;margin-bottom:0}
 .tm-sep{font-size:1.1rem;font-weight:700;color:var(--lt);padding-top:18px}
 
+.regles{list-style:none;padding:0;margin:4px 0;font-size:.72rem}.regles li.ok{color:#166534;font-weight:700}
+.mdp-wrap{display:flex;gap:6px;align-items:center}.mdp-wrap input{flex:1}
+.aide-c{font-size:.7rem;color:var(--dim);margin:4px 0;line-height:1.4}
+.auth-msg{color:#c0392b;font-size:.75rem;min-height:16px;margin:4px 0}.auth-msg.ok{color:#166534}
+.auth-liens{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.compte-donnees{margin-top:10px;font-size:.75rem}
 </style>
 </head>
 <body>
@@ -557,7 +563,7 @@ a{color:var(--m)}
  <div class="hdr-acts">
   <button class="hbtn" onclick="openProgModal()">📋 <span class="t">Programmes</span></button>
   <button class="hbtn" onclick="saveJSON()">💾 <span class="t">Sauveg.</span></button>
-  <label class="hbtn" style="cursor:pointer">📂 <span class="t">Importer</span><input type="file" id="impF" accept=".json" style="display:none" onchange="loadJSON(this)"></label>
+  <label class="hbtn" style="cursor:pointer">📂 <span class="t">Importer</span><input autocomplete="off" type="file" id="impF" accept=".json" style="display:none" onchange="loadJSON(this)"></label>
   <button class="hbtn" onclick="openShare()">📤 <span class="t">Partager</span></button>
   <button class="hbtn" onclick="openSettings()">⚙️</button>
   <button class="hbtn" onclick="openModal('helpModal')">❓</button>
@@ -596,30 +602,30 @@ a{color:var(--m)}
 <div class="modal"><div class="mhd"><span class="mhd-t" id="editClsTitle">Nouvelle classe</span><button class="mx" onclick="closeModal('editClsModal')">&#10005;</button></div>
 <div class="mbody">
 <div id="profileInfoHint" class="profile-hint" style="display:none">ℹ️ Pré-rempli depuis votre profil · <button onclick="openSettings()" style="background:none;border:none;color:var(--m);cursor:pointer;text-decoration:underline;font-size:.68rem">Modifier</button></div>
-<div class="fg"><label class="req">Nom de la classe</label><input id="cls_name" placeholder="ex : CAP Boulangerie · Groupe 1"></div>
+<div class="fg"><label class="req">Nom de la classe</label><input autocomplete="off" id="cls_name" placeholder="ex : CAP Boulangerie · Groupe 1"></div>
 <div class="fg"><label class="req">Couleur de la classe</label><div class="cpick" id="colorPicker"></div></div>
-<div class="fg2"><div class="fg"><label class="req">Année scolaire</label><input id="cls_year" placeholder="année en cours"></div><div class="fg"><label class="req">Établissement</label><input id="cls_etab" placeholder="votre établissement"></div></div>
-<div class="fg"><label class="req">Enseignant(e)</label><input id="cls_teacher" placeholder="votre nom"></div>
+<div class="fg2"><div class="fg"><label class="req">Année scolaire</label><input autocomplete="off" id="cls_year" placeholder="année en cours"></div><div class="fg"><label class="req">Établissement</label><input autocomplete="off" id="cls_etab" placeholder="votre établissement"></div></div>
+<div class="fg"><label class="req">Enseignant(e)</label><input autocomplete="off" id="cls_teacher" placeholder="votre nom"></div>
 <div class="fg"><label class="req">Matières enseignées</label><div id="subjPicker"></div></div>
-<input type="hidden" id="cls_editId">
+<input autocomplete="off" type="hidden" id="cls_editId">
 </div><div class="mft"><button class="mb mb-s" onclick="closeModal('editClsModal')">Annuler</button><button class="mb mb-p" onclick="saveClass()">Enregistrer</button></div></div></div>
 
 <div class="overlay" id="settingsModal" onclick="bgClose(event,'settingsModal')">
 <div class="modal"><div class="mhd"><span class="mhd-t">⚙️ Mon profil enseignant</span><button class="mx" onclick="closeModal('settingsModal')">&#10005;</button></div>
 <div class="mbody"><div style="font-size:.72rem;color:var(--dim);margin-bottom:10px;padding:8px 10px;background:var(--m-zone);border:1px solid var(--m-mid);border-radius:var(--r2)">Ces informations pré-remplissent chaque nouvelle classe (modifiables classe par classe).</div>
-<div class="fg"><label class="req">Votre nom</label><input id="set_teacher" placeholder="votre nom"></div>
-<div class="fg"><label class="req">Votre établissement</label><input id="set_etab" placeholder="nom de l'établissement"></div>
+<div class="fg"><label class="req">Votre nom</label><input autocomplete="off" id="set_teacher" placeholder="votre nom"></div>
+<div class="fg"><label class="req">Votre établissement</label><input autocomplete="off" id="set_etab" placeholder="nom de l'établissement"></div>
 </div><div class="mft"><button class="mb mb-s" id="set_skip_btn" style="display:none" onclick="skipFirstRun()">Configurer plus tard</button><button class="mb mb-p" onclick="saveSettings()">Enregistrer</button></div></div></div>
 
 <div class="overlay" id="prjModal" onclick="bgClose(event,'prjModal')">
 <div class="modal"><div class="mhd"><span class="mhd-t" id="prjModalTitle">Nouveau projet</span><button class="mx" onclick="closeModal('prjModal')">&#10005;</button></div>
 <div class="mbody">
 <div style="padding:7px 10px;background:var(--t-bg);border:1px solid var(--t-mid);border-radius:var(--r2);margin-bottom:10px;font-size:.71rem;color:var(--t-dk);font-weight:600">⚙️ Technologie · Projet cycle 4</div>
-<div class="fg"><label>Nom du projet *</label><input id="prj_name" placeholder="ex : Robot suiveur de ligne"></div>
+<div class="fg"><label>Nom du projet *</label><input autocomplete="off" id="prj_name" placeholder="ex : Robot suiveur de ligne"></div>
 <div class="fg2"><div class="fg"><label>Thème</label><select id="prj_theme"><option value="">— thème —</option><option>Robotique</option><option>Domotique</option><option>Objet communicant</option><option>Éco-conception</option><option>Fabrication 3D</option><option>Alarme / Sécurité</option><option>Santé / Sport</option><option>Autre</option></select></div>
 <div class="fg"><label>Statut</label><select id="prj_status"><option value="0">💡 Idée / Analyse</option><option value="1">🔨 En conception</option><option value="2">🧪 Prototype / Tests</option><option value="3">✅ Terminé</option></select></div></div>
 <div class="fg"><label>Description</label><textarea id="prj_desc" placeholder="Objectif, contraintes…"></textarea></div>
-<input type="hidden" id="prjIdx">
+<input autocomplete="off" type="hidden" id="prjIdx">
 </div><div class="mft"><button class="mb mb-s" onclick="closeModal('prjModal')">Annuler</button><button class="mb mb-v" onclick="saveProject()">Enregistrer</button></div></div></div>
 
 <div class="overlay" id="shareModal" onclick="bgClose(event,'shareModal')">
@@ -627,7 +633,7 @@ a{color:var(--m)}
 <div class="mbody">
 <div class="fg"><label>Classe à exporter</label><select id="shr_cls" onchange="shrClsChange()"><option value="">— choisir —</option></select></div>
 <div id="shr_info" style="margin-bottom:10px"></div>
-<label class="incl-untreated-row"><input type="checkbox" id="shr_inclUntreated"> <span>Inclure les items non traités <span class="iu-hint">(décoché : seuls les items commencés, en révision ou maîtrisés apparaissent dans l'export thématique)</span></span></label>
+<label class="incl-untreated-row"><input autocomplete="off" type="checkbox" id="shr_inclUntreated"> <span>Inclure les items non traités <span class="iu-hint">(décoché : seuls les items commencés, en révision ou maîtrisés apparaissent dans l'export thématique)</span></span></label>
 <div class="share-grid">
 <div class="share-card" style="background:var(--m-zone);border:1px solid var(--m-mid)">
 <div class="share-card-ttl" style="color:var(--m)">📊 Thématique</div>
@@ -647,12 +653,12 @@ a{color:var(--m)}
 <div class="mbody">
 <div id="tm_label" style="font-size:.74rem;color:var(--dim);margin-bottom:12px;padding:8px 10px;background:var(--sf2);border-radius:var(--r2);border:1px solid var(--bd)"></div>
 <div class="tm-row">
-<div class="fg"><label>Heures</label><input type="number" id="tm_h" min="0" value="0" style="text-align:center" oninput="_updateTimePreview()"></div>
+<div class="fg"><label>Heures</label><input autocomplete="off" type="number" id="tm_h" min="0" value="0" style="text-align:center" oninput="_updateTimePreview()"></div>
 <span class="tm-sep">:</span>
-<div class="fg"><label>Minutes</label><input type="number" id="tm_m" min="0" max="59" value="0" style="text-align:center" oninput="_updateTimePreview()"></div>
+<div class="fg"><label>Minutes</label><input autocomplete="off" type="number" id="tm_m" min="0" max="59" value="0" style="text-align:center" oninput="_updateTimePreview()"></div>
 </div>
 <div id="tm_preview" style="font-size:.7rem;color:var(--m);margin-top:8px;font-weight:600;min-height:14px"></div>
-<div style="margin-top:10px"><label style="font-size:.72rem;font-weight:700;color:var(--dim);display:block;margin-bottom:4px">📅 Date de réalisation</label><input type="date" id="tm_date" style="width:100%;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--r2);font-size:.8rem;background:var(--sf2)"></div>
+<div style="margin-top:10px"><label style="font-size:.72rem;font-weight:700;color:var(--dim);display:block;margin-bottom:4px">📅 Date de réalisation</label><input autocomplete="off" type="date" id="tm_date" style="width:100%;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--r2);font-size:.8rem;background:var(--sf2)"></div>
 </div>
 <div class="mft"><button class="mb mb-s" onclick="skipTime()">Ignorer</button><button class="mb mb-p" onclick="confirmTime()">Enregistrer</button></div>
 </div></div>
@@ -686,20 +692,20 @@ a{color:var(--m)}
 
 <h3>1. Qui est responsable de ce traitement ?</h3>
 <p><strong>Tom Rougeaud</strong>, enseignant de mathématiques en lycée professionnel (France).<br>
-Contact : <a href="mailto:tom.rougeaud.education@gmail.com">tom.rougeaud.education@gmail.com</a></p>
+Contact : via le lien LinkedIn de la fenêtre « Contact ».</p>
 
 <h3>2. Deux modes de fonctionnement</h3>
 <p>L'application fonctionne <strong>sans compte</strong> (données stockées uniquement dans le localStorage de votre navigateur, sur votre appareil) ou <strong>avec un compte</strong> (données synchronisées sur les serveurs de Supabase).</p>
 <ul>
 <li><strong>Sans compte</strong> : aucune donnée ne quitte votre appareil. Tout reste dans <code>localStorage</code>.</li>
-<li><strong>Avec compte</strong> : votre email (authentification), et les données de progression (matière, classe, statut des notions, temps, dates) sont envoyés et stockés sur les serveurs de Supabase.</li>
+<li><strong>Avec compte</strong> : votre identifiant (un pseudo, ou l’adresse e-mail d’un ancien compte), une empreinte irréversible de votre mot de passe, et les données de progression (matière, classe, statut des notions, temps, dates) et d’évaluations sont envoyés et stockés sur les serveurs de Supabase. Ces contenus ne sont pas chiffrés dans votre navigateur.</li>
 </ul>
 <div class="note-box">⚠️ Aucune donnée nominative d'élève ne doit être saisie. L'application suit une <strong>progression pédagogique par classe</strong>, sans identification individuelle.</div>
 
 <h3>3. Données collectées (compte uniquement)</h3>
 <ul>
-<li>Adresse e-mail (authentification)</li>
-<li>Nom et établissement (optionnels, profil enseignant)</li>
+<li>Identifiant de connexion : un pseudo propre à cette appli (aucune adresse e-mail demandée), ou l’adresse e-mail d’un ancien compte</li>
+<li>Mot de passe : conservé uniquement sous forme d’empreinte irréversible</li>
 <li>Données de progression : identifiants de classe, matière, notion, statut, date, temps consacré</li>
 <li>Évaluations : titre, date, notions associées</li>
 </ul>
@@ -715,7 +721,7 @@ Contact : <a href="mailto:tom.rougeaud.education@gmail.com">tom.rougeaud.educati
 <li><strong>Droit de rectification</strong> : modifiez directement vos données dans l'application</li>
 <li><strong>Droit de portabilité</strong> : export JSON standardisé disponible à tout moment</li>
 </ul>
-<p>Pour toute demande, contactez : <a href="mailto:tom.rougeaud.education@gmail.com">tom.rougeaud.education@gmail.com</a></p>
+<p>Pour toute demande, utilisez le lien LinkedIn de la fenêtre « Contact ».</p>
 
 <h3>6. Conservation</h3>
 <p>Les données sont conservées jusqu'à suppression du compte. En l'absence de compte, les données localStorage peuvent être effacées à tout moment depuis les paramètres de votre navigateur.</p>
@@ -1076,12 +1082,12 @@ function renderMod(cid,sid,domId,mod,col,sc){
       +'<button class="sec-btn del" onclick="delSection(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\','+sec.si+',\''+sec.src+'\')">×</button></div>'
       +'<div id="sb_'+mod.id+'_'+sec.si+'">';
     (sec.n||[]).forEach(function(n,ni){var k=nKey(domId,mod.id,sec.si,ni);if(sd.delNotions.includes(k))return;var txt=sd.renamedNotions[k]||n;var sv=sd.statuses[k]||{s:0,d:null};var sp=sd.spiral[k]||[];body+=mkNRow(cid,sid,k,txt,sv,sp);});
-    body+='</div><div id="anr_'+mod.id+'_'+sec.si+'" style="display:none"><div class="add-nr-row"><input class="add-inp" id="ani_'+mod.id+'_'+sec.si+'" placeholder="Nouvelle notion…" onkeydown="if(event.key===\'Enter\')confAddN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\','+sec.si+')"><button class="add-ok" onclick="confAddN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\','+sec.si+')">OK</button><button class="add-cancel" onclick="hideAddN(\''+mod.id+'\',\''+sec.si+'\')">✕</button></div></div>';
+    body+='</div><div id="anr_'+mod.id+'_'+sec.si+'" style="display:none"><div class="add-nr-row"><input autocomplete="off" class="add-inp" id="ani_'+mod.id+'_'+sec.si+'" placeholder="Nouvelle notion…" onkeydown="if(event.key===\'Enter\')confAddN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\','+sec.si+')"><button class="add-ok" onclick="confAddN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\','+sec.si+')">OK</button><button class="add-cancel" onclick="hideAddN(\''+mod.id+'\',\''+sec.si+'\')">✕</button></div></div>';
   });
   var cns=(sd.customNotions[mod.id]||[]).filter(function(cn){return!sd.delNotions.includes('cn|'+cn.id);});
   body+='<div class="sec-hd"><span class="sec-ttl" style="color:'+col+'">Notions personnalisées</span><button class="sec-btn add" onclick="showAddCN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\')">＋</button></div>';
   cns.forEach(function(cn){var k='cn|'+cn.id;var sv=sd.statuses[k]||{s:0,d:null};var sp=sd.spiral[k]||[];body+=mkNRow(cid,sid,k,cn.text,sv,sp);});
-  body+='<div id="anr_'+mod.id+'_cn" style="display:none"><div class="add-nr-row"><input class="add-inp" id="ani_'+mod.id+'_cn" placeholder="Notion personnalisée…" onkeydown="if(event.key===\'Enter\')confAddCN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\')"><button class="add-ok" onclick="confAddCN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\')">OK</button><button class="add-cancel" onclick="hideAddN(\''+mod.id+'\',\'cn\')">✕</button></div></div>'
+  body+='<div id="anr_'+mod.id+'_cn" style="display:none"><div class="add-nr-row"><input autocomplete="off" class="add-inp" id="ani_'+mod.id+'_cn" placeholder="Notion personnalisée…" onkeydown="if(event.key===\'Enter\')confAddCN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\')"><button class="add-ok" onclick="confAddCN(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\')">OK</button><button class="add-cancel" onclick="hideAddN(\''+mod.id+'\',\'cn\')">✕</button></div></div>'
     +'<button class="add-sec-btn" onclick="addSection(\''+cid+'\',\''+sid+'\',\''+domId+'\',\''+mod.id+'\')">＋ Nouvelle section</button>';
   return '<div class="mc" id="mc_'+mod.id+'">'
     +'<div class="mc-hd" onclick="toggleMod(\''+sid+'\',\''+mod.id+'\')">'
@@ -1103,7 +1109,7 @@ function mkNRow(cid,sid,key,text,sv,spArr){
   return '<div class="nr'+(isDiagram(text)?' diagram-row':'')+'" id="nr_'+safe+'">'
     +'<button class="sts '+(SCLS[sv.s]||'')+'" onclick="cycleStatus(\''+cid+'\',\''+sid+'\',\''+key.replace(/'/g,"\\'")+'\')">'+SICO[sv.s]+'</button>'
     +'<span class="mtxt'+(sv.s===3?' done':'')+'" id="nt_'+safe+'">'+textE+'</span>'
-    +'<input class="nedit-inp" id="nei_'+safe+'" value="'+textE+'" onkeydown="if(event.key===\'Enter\')confRenN(\''+cid+'\',\''+sid+'\',\''+key.replace(/'/g,"\\'")+'\');if(event.key===\'Escape\')cancelRenN(\''+safe+'\')">'
+    +'<input autocomplete="off" class="nedit-inp" id="nei_'+safe+'" value="'+textE+'" onkeydown="if(event.key===\'Enter\')confRenN(\''+cid+'\',\''+sid+'\',\''+key.replace(/'/g,"\\'")+'\');if(event.key===\'Escape\')cancelRenN(\''+safe+'\')">'
     +'<div class="nmeta"><span class="nbg '+NBCLS[sv.s]+'">'+SLBL[sv.s]+'</span>'
     +(sv.d?'<span class="ndate">'+fmtDate(sv.d)+'</span>':'')
     +(sv.time?'<span class="ntime" id="ntm_'+safe+'" onclick="event.stopPropagation();openTimeModal(\''+cid+'\',\''+sid+'\',[\''+key.replace(/'/g,"\\'")+'\'],1,\'1 item\')" title="Modifier le temps">⏱ '+fmtTime(sv.time)+'</span>':'<span id="ntm_'+safe+'"></span>')
@@ -1675,143 +1681,438 @@ function skipTime(){
 </script>
 
 <script>
-/* ============================================================
-   SUPABASE AUTH + SYNC
-   ============================================================ */
-(function(){
-  var SB_URL='https://zfqzvwpjxmrlctxsmxch.supabase.co';
-  var SB_KEY='sb_publishable_21JhJbzpINsSzFdD0oGqUw_BL_AtgSA';
-  var sb=null;
-  var _user=null;
+/* =====================================================================
+   Projet : Suivi Progression — bloc « Compte » commun  ·  Version : 2.0.0  ·  Date : 25/11/2026
+   Auteur : Tom Rougeaud  ·  Licence : CC BY-NC-SA 4.0
+   Réalisé avec l’aide de l’IA : Claude Sonnet 5.5 (Anthropic)
+   Rôle : connexion / création de compte à pseudo, mot de passe fort,
+          changement de mot de passe, synchronisation de la progression et des évaluations.
+   Aucune bibliothèque externe : petit client REST écrit pour cette appli.
+   Même fonctionnement et mêmes règles que les autres applis (Fiches, Ma séance).
+   ===================================================================== */
+(function () {
+  'use strict';
 
-  function initSB(){
-    if(typeof window.supabase==='undefined')return;
-    sb=window.supabase.createClient(SB_URL,SB_KEY);
-    sb.auth.onAuthStateChange(function(ev,sess){
-      _user=sess?sess.user:null;
-      updateAuthUI();
-      if(_user&&ev==='SIGNED_IN')pullProgress();
-    });
-    sb.auth.getSession().then(function(r){
-      _user=r.data.session?r.data.session.user:null;
-      updateAuthUI();
-      if(_user)pullProgress();
-    });
+  /* ===== SECTION : ADAPTATEUR (seule partie qui change d’une appli à l’autre) ===== */
+  var APP_ID = 'progression';   /* chaque appli a ses propres comptes à pseudo : pseudo@<appli>.pseudo.invalid */
+  var CONTENU = 'votre progression par classe et matière (statuts, dates, temps) et vos évaluations (titres, dates, notions)';
+
+  /* ===== SECTION : Constantes ===== */
+  var SB_URL = 'https://zfqzvwpjxmrlctxsmxch.supabase.co';          /* adresse publique du projet */
+  var SB_KEY = 'sb_publishable_21JhJbzpINsSzFdD0oGqUw_BL_AtgSA';     /* clé publique (publishable) : publique par conception */
+  var DOMAINE_PSEUDO = APP_ID + '.pseudo.invalid';                   /* faux domaine réservé : un pseudo n’a jamais de vraie adresse e-mail */
+  var CLE_SESSION = 'suiviprog_v2_session';                          /* clé de stockage de la session (préfixe appli + version) */
+  var LONGUEUR_MIN = 8;                                              /* longueur minimale du mot de passe */
+  var OCTETS_MAX = 72;                                               /* limite technique du hachage des mots de passe */
+  var SYMBOLES = "!@#$%^&*()_+-=[]{};'\\:\"|<>?,./`~";                /* caractères spéciaux comptés par le serveur */
+  var DELAI_PSEUDO = 400;                                            /* ms avant de vérifier le pseudo après la dernière frappe */
+
+  /* ===== SECTION : Règles (fonctions pures) ===== */
+
+  /* Met un pseudo en forme : sans espaces autour, en minuscules. */
+  function normaliserPseudo(s) { return String(s == null ? '' : s).trim().toLowerCase(); }
+  /* Pseudo valide : 6 à 20 caractères parmi a-z, 0-9, - et _ (exception unique : « tom »). */
+  function pseudoValide(s) { return /^([a-z0-9_-]{6,20}|tom)$/.test(s); }
+  /* Vrai si l’identifiant saisi est une adresse e-mail (ancien compte). */
+  function estEmail(s) { return String(s == null ? '' : s).indexOf('@') >= 0; }
+  /* Identifiant saisi → « e-mail » de connexion (un pseudo devient pseudo@progression.pseudo.invalid). */
+  function identifiantVersEmail(id) {
+    id = String(id == null ? '' : id).trim();
+    return estEmail(id) ? id : normaliserPseudo(id) + '@' + DOMAINE_PSEUDO;
+  }
+  /* Nombre d’octets UTF-8 d’un texte. */
+  function octets(s) {
+    if (typeof TextEncoder !== 'undefined') return new TextEncoder().encode(s).length;
+    return unescape(encodeURIComponent(s)).length;
+  }
+  /* Évalue un mot de passe : 8 caractères, minuscule, majuscule, chiffre, caractère spécial. */
+  function evaluerMdp(pw) {
+    pw = String(pw == null ? '' : pw);
+    var r = { longueur: pw.length >= LONGUEUR_MIN, minuscule: /[a-z]/.test(pw), majuscule: /[A-Z]/.test(pw), chiffre: /[0-9]/.test(pw), symbole: false, tropLong: octets(pw) > OCTETS_MAX };
+    for (var i = 0; i < pw.length; i++) { if (SYMBOLES.indexOf(pw.charAt(i)) >= 0) { r.symbole = true; break; } }
+    r.ok = r.longueur && r.minuscule && r.majuscule && r.chiffre && r.symbole && !r.tropLong;
+    return r;
   }
 
-  function requireAuth(){
-    if(window._SB&&window._SB.getUser())return true;
-    // Re-show gate if somehow dismissed without auth
-    var g=document.getElementById('auth-gate');
-    if(g){g.style.display='flex';g.style.opacity='1';}
-    return false;
+  /* ===== SECTION : Stockage de la session (protégé, repli en mémoire) ===== */
+  var memoire = {};
+  function lire(k) { try { var v = localStorage.getItem(k); return v === null ? (memoire[k] || null) : v; } catch (e) { return memoire[k] || null; } }
+  function ecrire(k, v) { memoire[k] = v; try { localStorage.setItem(k, v); } catch (e) { /* stockage indisponible : on garde la mémoire */ } }
+  function effacer(k) { delete memoire[k]; try { localStorage.removeItem(k); } catch (e) { /* ignoré */ } }
+
+  /* ===== SECTION : Client REST minimal (sans bibliothèque) ===== */
+  var session = null;      /* { access_token, refresh_token, expires_at, user } */
+  var _user = null;        /* utilisateur(trice) connecté(e) */
+  var mdpFaible = false;   /* vrai si le serveur signale un mot de passe ne respectant plus la règle */
+  var refreshing = null;
+
+  /* Enregistre (ou efface) la session, met à jour l’utilisateur courant. */
+  function setSession(s) {
+    session = s; _user = s ? s.user : null;
+    if (s) ecrire(CLE_SESSION, JSON.stringify(s)); else effacer(CLE_SESSION);
   }
-  function hideAuthGate(){
-    var g=document.getElementById('auth-gate');
-    if(g){g.style.opacity='0';g.style.transition='opacity .4s';setTimeout(function(){g.style.display='none';},400);}
+  function fromToken(b) {
+    return { access_token: b.access_token, refresh_token: b.refresh_token, expires_at: b.expires_at || (Math.floor(Date.now() / 1000) + (b.expires_in || 3600)), user: b.user };
   }
-  function updateAuthUI(){
-    var el=document.getElementById('sb-auth-area');
-    var ftBtn=document.getElementById('ft-auth-btn');
-    var ftLabel=document.getElementById('ft-auth-label');
-    var ftAcc=document.getElementById('ft-account-btn');
-    if(_user){
-      hideAuthGate();
-      if(el)el.innerHTML='<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
-        +'<span style="color:var(--m);font-weight:700">☁️ Connecté</span>'
-        +'<button onclick="window._SB.logout()" style="font-size:.65rem;padding:2px 7px;border:1px solid var(--bd);border-radius:10px;background:none;cursor:pointer;color:var(--dim)">Déconnexion</button>'
-        +'<button onclick="openModal(\'evalModal\')" style="font-size:.65rem;padding:2px 7px;border:1px solid var(--m);border-radius:10px;background:none;cursor:pointer;color:var(--m)">📝 Évals</button>'
-        +'</div>';
-      if(ftLabel)ftLabel.textContent='Connecté ✓';
-      if(ftBtn){ftBtn.onclick=function(){openModal('evalModal');};ftBtn.style.background='var(--s-green)';ftBtn.style.color='#fff';}
-      if(ftAcc)ftAcc.style.display='flex';
+  function headers(extra, anon) {
+    var h = { apikey: SB_KEY, Authorization: 'Bearer ' + ((!anon && session) ? session.access_token : SB_KEY) };
+    if (extra) for (var k in extra) h[k] = extra[k];
+    return h;
+  }
+  function netErr(e) { var x = new Error('Réseau indisponible'); x.network = true; x.cause = e; return x; }
+  function httpErr(r, body) {
+    var msg = (body && (body.message || body.msg || body.error_description || body.error || body.hint)) || ('Erreur ' + r.status);
+    var x = new Error(msg); x.status = r.status; x.body = body; return x;
+  }
+  function lireCorps(r) { return r.text().then(function (t) { if (!t) return null; try { return JSON.parse(t); } catch (e) { return t; } }); }
+
+  /* Renouvelle le jeton si besoin (une seule demande à la fois). */
+  function rafraichir() {
+    if (refreshing) return refreshing;
+    if (!session || !session.refresh_token) return Promise.reject(new Error('Session expirée'));
+    refreshing = fetch(SB_URL + '/auth/v1/token?grant_type=refresh_token', { method: 'POST', headers: headers({ 'Content-Type': 'application/json' }, true), body: JSON.stringify({ refresh_token: session.refresh_token }) })
+      .then(function (r) { return lireCorps(r).then(function (b) { if (!r.ok) { if (r.status >= 400 && r.status < 500) { setSession(null); majInterface(); } throw httpErr(r, b); } var u = session.user; setSession(fromToken(b)); if (!session.user) session.user = u; _user = session.user; }); }, function (e) { throw netErr(e); })
+      .then(function (v) { refreshing = null; return v; }, function (e) { refreshing = null; throw e; });
+    return refreshing;
+  }
+  function assurerFrais() {
+    if (!session) return Promise.resolve();
+    if (session.expires_at - Math.floor(Date.now() / 1000) > 60) return Promise.resolve();
+    return rafraichir();
+  }
+  /* Requête générique avec renouvellement automatique du jeton. */
+  function appeler(chemin, opt, deja) {
+    opt = opt || {};
+    return assurerFrais().then(function () {
+      return fetch(SB_URL + chemin, { method: opt.method || 'GET', headers: headers(opt.headers), body: opt.body }).then(function (r) {
+        return lireCorps(r).then(function (b) {
+          if (r.status === 401 && !deja && session) return rafraichir().then(function () { return appeler(chemin, opt, true); });
+          if (!r.ok) throw httpErr(r, b);
+          return b;
+        });
+      }, function (e) { throw netErr(e); });
+    });
+  }
+  function qs(p) { var o = []; for (var k in p) { if (p[k] !== undefined && p[k] !== null) o.push(encodeURIComponent(k) + '=' + encodeURIComponent(p[k])); } return o.length ? '?' + o.join('&') : ''; }
+  var JSON_H = { 'Content-Type': 'application/json' };
+  var rest = {
+    select: function (table, p) { return appeler('/rest/v1/' + table + qs(p), { headers: { Accept: 'application/json' } }); },
+    upsert: function (table, rows, conflit) { return appeler('/rest/v1/' + table + '?on_conflict=' + conflit, { method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(rows) }); },
+    insert: function (table, rows, retour) { return appeler('/rest/v1/' + table, { method: 'POST', headers: { 'Content-Type': 'application/json', Prefer: retour ? 'return=representation' : 'return=minimal', Accept: retour ? 'application/vnd.pgrst.object+json' : 'application/json' }, body: JSON.stringify(rows) }); },
+    remove: function (table, filtre) { return appeler('/rest/v1/' + table + qs(filtre), { method: 'DELETE', headers: { Prefer: 'return=minimal' } }); },
+    rpc: function (nom, args) { return appeler('/rest/v1/rpc/' + nom, { method: 'POST', headers: JSON_H, body: JSON.stringify(args || {}) }); }
+  };
+  var auth = {
+    connexion: function (email, mdp) {
+      return fetch(SB_URL + '/auth/v1/token?grant_type=password', { method: 'POST', headers: headers(JSON_H, true), body: JSON.stringify({ email: email, password: mdp }) })
+        .then(function (r) { return lireCorps(r).then(function (b) { if (!r.ok) throw httpErr(r, b); mdpFaible = !!(b && b.weak_password); setSession(fromToken(b)); return session; }); }, function (e) { throw netErr(e); });
+    },
+    reglages: function () {
+      return fetch(SB_URL + '/auth/v1/settings', { headers: headers(null, true) }).then(function (r) { return r.ok ? lireCorps(r) : null; }).then(function (b) { return (b && typeof b === 'object') ? b : null; }, function () { return null; });
+    },
+    inscription: function (email, mdp, pseudo) {
+      var corps = { email: email, password: mdp, data: { pseudo: pseudo } };
+      return fetch(SB_URL + '/auth/v1/signup', { method: 'POST', headers: headers(JSON_H, true), body: JSON.stringify(corps) })
+        .then(function (r) { return lireCorps(r).then(function (b) { if (!r.ok) throw httpErr(r, b); if (b && b.access_token) { setSession(fromToken(b)); return true; } return false; }); }, function (e) { throw netErr(e); });
+    },
+    oubli: function (email) {
+      var redir = '';
+      try { if (/^https?:$/.test(location.protocol)) redir = '?redirect_to=' + encodeURIComponent(location.origin + location.pathname); } catch (e) { /* ignoré */ }
+      return fetch(SB_URL + '/auth/v1/recover' + redir, { method: 'POST', headers: headers(JSON_H, true), body: JSON.stringify({ email: email }) })
+        .then(function (r) { return lireCorps(r).then(function (b) { if (!r.ok) throw httpErr(r, b); return true; }); }, function (e) { throw netErr(e); });
+    },
+    deconnexion: function () {
+      var p = session ? fetch(SB_URL + '/auth/v1/logout', { method: 'POST', headers: headers() }).catch(function () { /* ignoré */ }) : Promise.resolve();
+      return p.then(function () { setSession(null); });
+    },
+    nouveauMdp: function (mdp) { return appeler('/auth/v1/user', { method: 'PUT', headers: JSON_H, body: JSON.stringify({ password: mdp }) }); }
+  };
+
+  /* ===== SECTION : Messages d’erreur lisibles ===== */
+  function messageErreur(err, mode) {
+    if (!err) return 'Un problème est survenu. Réessayez.';
+    if (err.silent && err.texte) return err.texte;
+    if (err.network) return 'Réseau indisponible. Réessayez.';
+    var m = String(err.message || '');
+    if (/Invalid login/i.test(m)) return 'Identifiant ou mot de passe incorrect.';
+    if (err.status === 429 || /rate limit|too many/i.test(m)) return 'Trop de tentatives : patientez quelques minutes avant de réessayer.';
+    if (/already registered|already been registered/i.test(m)) return 'Cet identifiant est déjà utilisé.';
+    if (/Database error saving new user/i.test(m)) return 'Ce pseudo vient d’être pris : choisissez-en un autre.';
+    if (/weak|password/i.test(m) && mode === 'up') return 'Mot de passe refusé par le serveur : ' + m;
+    return m || 'Un problème est survenu. Réessayez.';
+  }
+
+  /* ===== SECTION : Petits éléments d’interface (sans innerHTML pour le texte saisi) ===== */
+  function el(tag, attrs) {
+    var e = document.createElement(tag);
+    if (attrs) for (var k in attrs) { var v = attrs[k]; if (v === null || v === undefined || v === false) continue; if (k === 'class') e.className = v; else if (k === 'onclick') e.onclick = v; else if (k === 'hidden') e.hidden = true; else e.setAttribute(k, v === true ? '' : v); }
+    for (var i = 2; i < arguments.length; i++) { var c = arguments[i]; if (c == null) continue; e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); }
+    return e;
+  }
+  function champ(libelle, controle) { return el('div', { class: 'fg' }, el('label', null, libelle), controle); }
+  /* Champ mot de passe avec bouton Afficher / Masquer. */
+  function champMdp(id, autocomplete) {
+    var input = el('input', { type: 'password', id: id, autocomplete: autocomplete, autocapitalize: 'none', spellcheck: 'false' });
+    var bouton = el('button', { type: 'button', class: 'mb mb-s', 'aria-pressed': 'false' }, 'Afficher');
+    bouton.onclick = function () { var voir = input.type === 'password'; input.type = voir ? 'text' : 'password'; bouton.textContent = voir ? 'Masquer' : 'Afficher'; bouton.setAttribute('aria-pressed', voir ? 'true' : 'false'); };
+    return { wrap: el('div', { class: 'mdp-wrap' }, input, bouton), input: input };
+  }
+  /* Liste des règles qui se coche en direct (✓ / ○ : jamais la couleur seule). */
+  function listeRegles() {
+    var items = [['longueur', LONGUEUR_MIN + ' caractères au minimum'], ['minuscule', 'une lettre minuscule (a-z)'], ['majuscule', 'une lettre majuscule (A-Z)'], ['chiffre', 'un chiffre (0-9)'], ['symbole', 'un caractère spécial']];
+    var ul = el('ul', { class: 'regles' }), lis = {};
+    items.forEach(function (it) { lis[it[0]] = el('li', null, '○ ' + it[1]); ul.appendChild(lis[it[0]]); });
+    var aide = el('p', { class: 'aide-c' }, 'Caractères spéciaux acceptés : ' + SYMBOLES.split('').join(' ') + ' — les lettres accentuées et signes comme é è à ç § ² € sont permis, mais ne comptent pas comme caractère spécial.');
+    var alerte = el('p', { class: 'aide-c', role: 'status' });
+    function maj(pw) {
+      var r = evaluerMdp(pw);
+      items.forEach(function (it) { var ok = r[it[0]]; lis[it[0]].textContent = (ok ? '✓ ' : '○ ') + it[1]; lis[it[0]].className = ok ? 'ok' : ''; });
+      alerte.textContent = r.tropLong ? 'Mot de passe trop long (72 octets au maximum).' : '';
+      return r;
+    }
+    return { el: el('div', null, ul, aide, alerte), maj: maj };
+  }
+
+  /* ===== SECTION : Formulaire de connexion / création de compte ===== */
+  function construireConnexion(zone) {
+    zone.textContent = '';
+    var mode = 'in', minuteur = null, dernier = 0;
+    var ident = el('input', { type: 'text', id: 'compte-id', autocomplete: 'username', autocapitalize: 'none', spellcheck: 'false', placeholder: 'Pseudo (ou e-mail d’un ancien compte)' });
+    var mdp = champMdp('compte-mdp', 'current-password');
+    var regles = listeRegles();
+    var aidePseudo = el('p', { class: 'aide-c' }, 'Pseudo : 6 à 20 caractères — lettres, chiffres, tiret (-) et tiret bas (_), sans accent ni espace ; majuscules et minuscules sont équivalentes. Ce pseudo est propre à cette appli. Un ancien compte avec adresse e-mail reste utilisable pour se connecter.');
+    var etatPseudo = el('div', { class: 'aide-c', 'aria-live': 'polite' });
+    var msg = el('div', { class: 'auth-msg', role: 'alert' });
+    var btn = el('button', { type: 'submit', class: 'mb mb-p', style: 'width:100%;margin-top:8px' }, 'Se connecter');
+    var bascule = el('button', { type: 'button', class: 'sb-ftl' }, 'Créer un compte');
+    var oubli = el('button', { type: 'button', class: 'sb-ftl' }, 'Mot de passe oublié ?');
+    var zoneCreation = el('div', { hidden: true }, aidePseudo, etatPseudo, regles.el);
+
+    function changerMode(m) {
+      mode = m;
+      btn.textContent = m === 'in' ? 'Se connecter' : 'Créer mon compte';
+      bascule.textContent = m === 'in' ? 'Créer un compte' : 'J’ai déjà un compte';
+      mdp.input.setAttribute('autocomplete', m === 'in' ? 'current-password' : 'new-password');
+      ident.setAttribute('autocomplete', m === 'in' ? 'username' : 'off');
+      zoneCreation.hidden = (m === 'in'); oubli.hidden = (m !== 'in');
+      msg.className = 'auth-msg'; msg.textContent = ''; etatPseudo.textContent = '';
+    }
+    bascule.onclick = function () { changerMode(mode === 'in' ? 'up' : 'in'); };
+
+    /* Disponibilité du pseudo : la base répond seulement vrai ou faux. */
+    function verifierPseudo(valeur) {
+      var v = normaliserPseudo(valeur);
+      if (!v) { etatPseudo.textContent = ''; return Promise.resolve(null); }
+      if (estEmail(v)) { etatPseudo.textContent = '✗ La création se fait avec un pseudo (pas d’adresse e-mail).'; return Promise.resolve(false); }
+      if (!pseudoValide(v)) { etatPseudo.textContent = '✗ Format non valide : 6 à 20 caractères (lettres, chiffres, - et _).'; return Promise.resolve(false); }
+      etatPseudo.textContent = 'Vérification…';
+      var n = ++dernier;
+      return rest.rpc('pseudo_disponible', { p: v, p_app: APP_ID }).then(function (ok) {
+        if (n !== dernier) return null;
+        etatPseudo.textContent = ok === true ? '✓ Pseudo disponible' : '✗ Pseudo déjà pris ou non autorisé';
+        return ok === true;
+      }, function () { if (n === dernier) etatPseudo.textContent = 'Vérification impossible (réseau). Réessayez.'; return null; });
+    }
+    ident.addEventListener('input', function () { if (mode !== 'up') return; clearTimeout(minuteur); minuteur = setTimeout(function () { verifierPseudo(ident.value); }, DELAI_PSEUDO); });
+    mdp.input.addEventListener('input', function () { if (mode === 'up') regles.maj(mdp.input.value); });
+
+    oubli.onclick = function () {
+      var id = ident.value.trim(); msg.className = 'auth-msg';
+      if (!id) { msg.textContent = 'Saisissez d’abord votre pseudo ou votre adresse e-mail.'; return; }
+      if (!estEmail(id)) { msg.textContent = 'Compte à pseudo : aucune adresse e-mail n’est enregistrée, la réinitialisation automatique est impossible. Demandez au responsable de l’appli de réinitialiser votre mot de passe (voir Contact).'; return; }
+      auth.oubli(id).then(function () { msg.className = 'auth-msg ok'; msg.textContent = 'Si ce compte existe, un e-mail de réinitialisation vient d’être envoyé.'; }, function (e) { msg.textContent = messageErreur(e, 'in'); });
+    };
+
+    /* Création : règles, puis vérification du serveur et du pseudo AVANT de créer le compte. */
+    function inscrire(id, pw) {
+      if (!evaluerMdp(pw).ok) return Promise.reject({ silent: true, texte: 'Le mot de passe ne respecte pas toutes les règles de la liste.' });
+      if (estEmail(id)) return Promise.reject({ silent: true, texte: 'Pour créer un compte, choisissez un pseudo. L’adresse e-mail ne sert qu’à se connecter à un ancien compte.' });
+      var v = normaliserPseudo(id);
+      if (!pseudoValide(v)) return Promise.reject({ silent: true, texte: 'Pseudo non valide : 6 à 20 caractères (lettres, chiffres, - et _).' });
+      return auth.reglages().then(function (s) {
+        if (s && s.mailer_autoconfirm === false) throw { silent: true, texte: 'Les comptes à pseudo ne sont pas encore activés sur cette appli. Contactez le responsable de l’appli.' };
+        return verifierPseudo(v);
+      }).then(function (libre) {
+        if (libre !== true) throw { silent: true, texte: 'Ce pseudo n’est pas disponible : choisissez-en un autre.' };
+        return auth.inscription(identifiantVersEmail(v), pw, v);
+      });
+    }
+
+    var form = el('form', { autocomplete: 'on' },
+      champ('Pseudo ou adresse e-mail', ident), champ('Mot de passe', mdp.wrap), zoneCreation, msg, btn,
+      el('div', { class: 'auth-liens' }, bascule, oubli),
+      blocDonnees(),
+      el('p', { class: 'aide-c' }, 'Aucune donnée d’élève n’est nécessaire : l’appli suit une progression par classe, sans identifier les élèves.'));
+    form.onsubmit = function (e) {
+      e.preventDefault(); msg.className = 'auth-msg'; msg.textContent = ''; btn.disabled = true;
+      var id = ident.value.trim(), pw = mdp.input.value;
+      var p = mode === 'in'
+        ? auth.connexion(identifiantVersEmail(id), pw).then(function () { return mdpFaible ? 'Votre mot de passe ne respecte plus la règle actuelle : changez-le dans « Mon compte ».' : ''; })
+        : inscrire(id, pw).then(function (connecte) { if (!connecte) throw { silent: true, texte: 'Compte créé, mais la connexion automatique a échoué : connectez-vous.' }; return ''; });
+      p.then(function (note) {
+        majInterface(); chargerApresConnexion();
+        closeModal('authModal');
+        if (note) alert(note);
+      }, function (err) { msg.textContent = messageErreur(err, mode); }).then(function () { btn.disabled = false; });
+    };
+    zone.appendChild(form);
+    changerMode('in');
+  }
+
+  /* Bloc dépliable « Vos données » : texte identique dans l’esprit aux autres applis, adapté à ce que fait cette appli. */
+  function blocDonnees() {
+    var li = function (t, c) { return el('li', null, el('strong', null, t), c); };
+    return el('details', { class: 'compte-donnees' },
+      el('summary', null, 'Vos données : qui y a accès ?'),
+      el('ul', { class: 'aide-c' },
+        li('Enregistré : ', 'votre identifiant (pseudo, ou adresse e-mail d’un ancien compte), votre mot de passe sous forme d’empreinte irréversible (nul ne peut le relire, pas même le responsable du projet), et ' + CONTENU + '.'),
+        li('Qui y accède : ', 'vous seul(e) dans l’appli. Attention : ces contenus ne sont PAS chiffrés dans votre navigateur ; le responsable technique du projet pourrait, en théorie, les lire dans la base. Ne saisissez aucun nom d’élève.'),
+        li('Compte propre à cette appli : ', 'votre pseudo n’existe que dans cette appli. Un même pseudo dans une autre appli est un autre compte. Seuls les anciens comptes avec adresse e-mail sont partagés entre plusieurs applis.'),
+        li('Services tiers : ', 'Supabase (hébergement de la base de données et des comptes) et GitHub Pages (hébergement des pages de l’appli, qui reçoit votre adresse IP comme tout site web). Aucun traceur, aucune publicité, aucun autre service.'),
+        li('Vos droits : ', 'exporter vos données, changer votre mot de passe, supprimer votre compte à tout moment (« Mon compte »).')),
+      el('p', { class: 'aide-c' }, el('button', { type: 'button', class: 'sb-ftl', onclick: function () { openModal('privModal'); } }, 'Lire la page Confidentialité')));
+  }
+
+  /* ===== SECTION : Changement de mot de passe (fenêtre « Mon compte ») ===== */
+  function construireMdp(zone, sansAncien) {
+    zone.textContent = '';
+    var p0 = sansAncien ? null : champMdp('compte-actuel', 'current-password');
+    var p1 = champMdp('compte-nouveau', 'new-password');
+    var p2 = champMdp('compte-confirm', 'new-password');
+    var regles = listeRegles();
+    var msg = el('div', { class: 'auth-msg', role: 'alert' });
+    p1.input.addEventListener('input', function () { regles.maj(p1.input.value); });
+    var btn = el('button', { type: 'submit', class: 'mb mb-p', style: 'width:100%;margin-top:8px' }, 'Changer le mot de passe');
+    var form = el('form', { autocomplete: 'off' },
+      el('p', { class: 'aide-c' }, el('strong', null, 'Changer le mot de passe')),
+      p0 ? champ('Mot de passe actuel', p0.wrap) : null, champ('Nouveau mot de passe', p1.wrap), regles.el, champ('Confirmation', p2.wrap), msg, btn);
+    form.onsubmit = function (e) {
+      e.preventDefault(); msg.className = 'auth-msg'; msg.textContent = '';
+      if (!evaluerMdp(p1.input.value).ok) { msg.textContent = 'Le mot de passe ne respecte pas toutes les règles de la liste.'; return; }
+      if (p1.input.value !== p2.input.value) { msg.textContent = 'La confirmation ne correspond pas.'; return; }
+      btn.disabled = true;
+      /* on vérifie d’abord l’ancien mot de passe en se reconnectant avec l’identifiant courant */
+      var avant = p0 ? auth.connexion(_user.email, p0.input.value) : Promise.resolve();
+      avant.then(function () { return auth.nouveauMdp(p1.input.value); })
+        .then(function () { msg.className = 'auth-msg ok'; msg.textContent = 'Mot de passe changé.'; form.reset(); regles.maj(''); },
+          function (err) { msg.textContent = messageErreur(err, 'up'); })
+        .then(function () { btn.disabled = false; });
+    };
+    zone.appendChild(form);
+  }
+
+  /* ===== SECTION : Interface (boutons, état connecté) ===== */
+  function majInterface() {
+    var zone = document.getElementById('sb-auth-area');
+    var ftBtn = document.getElementById('ft-auth-btn');
+    var ftLabel = document.getElementById('ft-auth-label');
+    var ftAcc = document.getElementById('ft-account-btn');
+    if (_user) {
+      if (zone) zone.innerHTML = '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
+        + '<span style="color:var(--m);font-weight:700">☁️ Connecté</span>'
+        + '<button onclick="window._SB.logout()" style="font-size:.65rem;padding:2px 7px;border:1px solid var(--bd);border-radius:10px;background:none;cursor:pointer;color:var(--dim)">Déconnexion</button>'
+        + '<button onclick="openModal(\'evalModal\')" style="font-size:.65rem;padding:2px 7px;border:1px solid var(--m);border-radius:10px;background:none;cursor:pointer;color:var(--m)">📝 Évals</button>'
+        + '</div>';
+      if (ftLabel) ftLabel.textContent = 'Connecté ✓';
+      if (ftBtn) { ftBtn.onclick = function () { openModal('evalModal'); }; ftBtn.style.background = 'var(--s-green)'; ftBtn.style.color = '#fff'; }
+      if (ftAcc) ftAcc.style.display = 'flex';
     } else {
-      if(el)el.innerHTML='<button onclick="openModal(\'authModal\')" style="font-size:.7rem;padding:4px 10px;border:1px solid var(--m);border-radius:10px;background:none;cursor:pointer;color:var(--m);font-weight:600">☁️ Connexion / Compte</button>';
-      if(ftLabel)ftLabel.textContent='Connexion';
-      if(ftBtn){ftBtn.onclick=function(){openModal('authModal');};ftBtn.style.background='var(--m)';ftBtn.style.color='#fff';}
-      if(ftAcc)ftAcc.style.display='none';
+      if (zone) zone.innerHTML = '<button onclick="openModal(\'authModal\')" style="font-size:.7rem;padding:4px 10px;border:1px solid var(--m);border-radius:10px;background:none;cursor:pointer;color:var(--m);font-weight:600">☁️ Connexion / Compte</button>';
+      if (ftLabel) ftLabel.textContent = 'Connexion';
+      if (ftBtn) { ftBtn.onclick = function () { openModal('authModal'); }; ftBtn.style.background = 'var(--m)'; ftBtn.style.color = '#fff'; }
+      if (ftAcc) ftAcc.style.display = 'none';
     }
   }
+  function chargerApresConnexion() { if (_user) pullProgress(); }
 
-  async function signIn(email,pass){
-    var r=await sb.auth.signInWithPassword({email:email,password:pass});
-    return r.error?r.error.message:null;
-  }
-  async function signUp(email,pass,nom,etab){
-    var r=await sb.auth.signUp({email:email,password:pass});
-    if(r.error)return r.error.message;
-    if(r.data.user){
-      await sb.from('profiles').upsert({id:r.data.user.id,nom:nom||'',etablissement:etab||''});
-    }
-    return null;
-  }
-  async function logout(){
-    await sb.auth.signOut();
-  }
-
-  async function syncProgress(cid,sid){
-    if(!_user||!sb)return;
-    var sd=getSD(cid,sid);
-    var rows=Object.entries(sd.statuses||{}).map(function(e){
-      return {user_id:_user.id,class_id:cid,subject_id:sid,item_key:e[0],
-              statut:String(e[1].s||0),date_realisation:e[1].d||null,temps_minutes:e[1].time||0};
+  /* ===== SECTION : Synchronisation de la progression ===== */
+  function syncProgress(cid, sid) {
+    if (!_user) return Promise.resolve();
+    var sd = getSD(cid, sid);
+    var rows = Object.entries(sd.statuses || {}).map(function (e) {
+      return { user_id: _user.id, class_id: cid, subject_id: sid, item_key: e[0], statut: String(e[1].s || 0), date_realisation: e[1].d || null, temps_minutes: e[1].time || 0 };
     });
-    if(rows.length)await sb.from('progress').upsert(rows,{onConflict:'user_id,class_id,subject_id,item_key'});
+    if (!rows.length) return Promise.resolve();
+    return rest.upsert('progress', rows, 'user_id,class_id,subject_id,item_key').then(null, function () { /* échec réseau : la copie locale reste la référence */ });
+  }
+  function pullProgress() {
+    if (!_user) return Promise.resolve();
+    return rest.select('progress', { select: '*', user_id: 'eq.' + _user.id }).then(function (data) {
+      (data || []).forEach(function (row) {
+        var sd = getSD(row.class_id, row.subject_id);
+        if (!sd.statuses) sd.statuses = {};
+        sd.statuses[row.item_key] = { s: parseInt(row.statut) || 0, d: row.date_realisation || today(), time: row.temps_minutes || 0 };
+      });
+      saveST(); render();
+    }, function () { /* hors ligne : on garde les données locales */ });
   }
 
-  async function pullProgress(){
-    if(!_user||!sb)return;
-    var r=await sb.from('progress').select('*').eq('user_id',_user.id);
-    if(r.error||!r.data)return;
-    r.data.forEach(function(row){
-      var sd=getSD(row.class_id,row.subject_id);
-      if(!sd.statuses)sd.statuses={};
-      sd.statuses[row.item_key]={s:parseInt(row.statut)||0,d:row.date_realisation||today(),time:row.temps_minutes||0};
+  /* ===== SECTION : Droits RGPD (export, suppression) ===== */
+  function nomAffiche() { var e = _user && _user.email || ''; return e.slice(-14) === '.pseudo.invalid' ? e.split('@')[0] : e; }
+  function exportData() {
+    if (!_user) { alert('Connectez-vous d’abord.'); return Promise.resolve(); }
+    return Promise.all([rest.select('progress', { select: '*', user_id: 'eq.' + _user.id }), loadEvals()]).then(function (r) {
+      var data = { exported_at: new Date().toISOString(), identifiant: nomAffiche(), progress: r[0] || [], evaluations: r[1] || [] };
+      var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'mes_donnees_suivi_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
+    }, function () { alert('Export impossible (réseau). Réessayez.'); });
+  }
+  function deleteAccount() {
+    if (!_user) { alert('Connectez-vous d’abord.'); return Promise.resolve(); }
+    if (!confirm('Supprimer définitivement votre compte et toutes vos données ? Cette action est irréversible.')) return Promise.resolve();
+    return rest.rpc('delete_user').then(function () { return auth.deconnexion(); }).then(function () {
+      majInterface(); closeModal('accountModal'); alert('Compte supprimé. Vos données ont été effacées.');
+    }, function (e) { alert('Suppression impossible : ' + messageErreur(e, 'in')); });
+  }
+  function logout() { return auth.deconnexion().then(majInterface); }
+
+  /* ===== SECTION : Évaluations ===== */
+  function loadEvals() {
+    if (!_user) return Promise.resolve([]);
+    return rest.select('evaluations', { select: '*,evaluation_items(item_key)', user_id: 'eq.' + _user.id, order: 'date_eval.desc' }).then(function (d) { return d || []; }, function () { return []; });
+  }
+  function saveEval(ev) {
+    if (!_user) return Promise.resolve(null);
+    return rest.insert('evaluations', { user_id: _user.id, class_id: ev.class_id, subject_id: ev.subject_id, titre: ev.titre, date_eval: ev.date_eval }, true).then(function (row) {
+      if (ev.items && ev.items.length) return rest.insert('evaluation_items', ev.items.map(function (k) { return { evaluation_id: row.id, item_key: k }; }), false).then(function () { return row; });
+      return row;
+    }, function () { return null; });
+  }
+  function deleteEval(id) {
+    if (!_user) return Promise.resolve();
+    return rest.remove('evaluations', { id: 'eq.' + id, user_id: 'eq.' + _user.id }).then(null, function () { /* ignoré */ });
+  }
+
+  /* ===== SECTION : Démarrage ===== */
+  /* Lien de réinitialisation reçu par e-mail (anciens comptes) : jetons dans le fragment de l’adresse. */
+  function lireLienRecuperation() {
+    var h = String(location.hash || '').replace(/^#\/?/, '');
+    if (h.indexOf('access_token=') < 0) return Promise.resolve(false);
+    var p = new URLSearchParams(h);
+    var s = { access_token: p.get('access_token'), refresh_token: p.get('refresh_token'), expires_at: Math.floor(Date.now() / 1000) + (+p.get('expires_in') || 3600), user: null };
+    session = s;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignoré */ }
+    return appeler('/auth/v1/user').then(function (u) { s.user = u; setSession(s); return p.get('type') === 'recovery'; }, function () { session = null; return false; });
+  }
+  function demarrer() {
+    majInterface();
+    lireLienRecuperation().then(function (recup) {
+      if (!recup) { var brut = lire(CLE_SESSION); if (brut) { try { var s = JSON.parse(brut); if (s && s.access_token && s.user) session = s, _user = s.user; } catch (e) { effacer(CLE_SESSION); } } }
+      majInterface();
+      if (_user) {
+        /* vérifie que la session est encore valide (compte supprimé, jeton expiré…) */
+        appeler('/auth/v1/user').then(function () { _user = session.user; chargerApresConnexion(); }, function (e) { if (e && !e.network) { setSession(null); majInterface(); } });
+      }
+      if (recup) { openModal('accountModal'); construireMdp(document.getElementById('compte-mdp-zone'), true); }
     });
-    saveST();
-    render();
   }
 
-  async function exportData(){
-    if(!_user||!sb){alert('Connectez-vous d\'abord.');return;}
-    var r=await sb.from('progress').select('*').eq('user_id',_user.id);
-    var data={exported_at:new Date().toISOString(),user_id:_user.id,email:_user.email,progress:r.data||[]};
-    var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);
-    a.download='mes_donnees_suivi_'+new Date().toISOString().slice(0,10)+'.json';a.click();
-  }
+  /* Points d’entrée utilisés par la page (boutons) */
+  window._SB = { logout: logout, syncProgress: syncProgress, pullProgress: pullProgress, exportData: exportData, deleteAccount: deleteAccount, loadEvals: loadEvals, saveEval: saveEval, deleteEval: deleteEval, getUser: function () { return _user; } };
+  window._Compte = { ouvrirConnexion: function () { construireConnexion(document.getElementById('auth-zone')); }, ouvrirMdp: function () { construireMdp(document.getElementById('compte-mdp-zone'), false); }, regles: { normaliserPseudo: normaliserPseudo, pseudoValide: pseudoValide, estEmail: estEmail, identifiantVersEmail: identifiantVersEmail, evaluerMdp: evaluerMdp } };
 
-  async function deleteAccount(){
-    if(!_user||!sb){alert('Connectez-vous d\'abord.');return;}
-    if(!confirm('Supprimer d\'finitivement votre compte et toutes vos donn\'es\u00a0? Cette action est irr\'versible.'))return;
-    await sb.rpc('delete_user');
-    await sb.auth.signOut();
-    alert('Compte supprimé. Vos données ont été effacées.');
-  }
-
-  // Évaluations
-  async function loadEvals(){
-    if(!_user||!sb)return[];
-    var r=await sb.from('evaluations').select('*,evaluation_items(item_key)').eq('user_id',_user.id).order('date_eval',{ascending:false});
-    return r.data||[];
-  }
-  async function saveEval(evalObj){
-    if(!_user||!sb)return null;
-    var r=await sb.from('evaluations').insert({user_id:_user.id,class_id:evalObj.class_id,subject_id:evalObj.subject_id,titre:evalObj.titre,date_eval:evalObj.date_eval}).select().single();
-    if(r.error)return null;
-    if(evalObj.items&&evalObj.items.length){
-      await sb.from('evaluation_items').insert(evalObj.items.map(function(k){return{evaluation_id:r.data.id,item_key:k};}));
-    }
-    return r.data;
-  }
-  async function deleteEval(id){
-    if(!_user||!sb)return;
-    await sb.from('evaluations').delete().eq('id',id).eq('user_id',_user.id);
-  }
-
-  window._SB={signIn,signUp,logout,syncProgress,pullProgress,exportData,deleteAccount,loadEvals,saveEval,deleteEval,getUser:function(){return _user;}};
-
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initSB);}else{initSB();}
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', demarrer); else demarrer();
 })();
 </script>
 
@@ -1819,25 +2120,7 @@ function skipTime(){
 <div class="overlay" id="authModal" onclick="bgClose(event,'authModal')">
 <div class="modal"><div class="mhd"><span class="mhd-t">☁️ Connexion / Inscription</span><button class="mx" onclick="closeModal('authModal')">&#10005;</button></div>
 <div class="mbody">
-<div style="display:flex;gap:8px;margin-bottom:16px">
-  <button id="auth-tab-in" onclick="showAuthTab('in')" style="flex:1;padding:7px;border:2px solid var(--m);border-radius:8px;font-weight:700;cursor:pointer;background:var(--m);color:#fff">Connexion</button>
-  <button id="auth-tab-up" onclick="showAuthTab('up')" style="flex:1;padding:7px;border:2px solid var(--bd);border-radius:8px;font-weight:700;cursor:pointer;background:none;color:var(--dim)">Créer un compte</button>
-</div>
-<div id="auth-form-in">
-  <div class="fg"><label>Email</label><input type="email" id="auth_email" placeholder="vous@exemple.fr"></div>
-  <div class="fg"><label>Mot de passe</label><input type="password" id="auth_pass" placeholder="••••••••"></div>
-  <div id="auth-msg" style="color:#c0392b;font-size:.75rem;min-height:16px;margin:4px 0"></div>
-  <button class="mb mb-p" style="width:100%;margin-top:8px" onclick="doSignIn()">Se connecter</button>
-</div>
-<div id="auth-form-up" style="display:none">
-  <div class="fg"><label>Nom (optionnel)</label><input type="text" id="auth_nom" placeholder="Votre nom"></div>
-  <div class="fg"><label>Établissement (optionnel)</label><input type="text" id="auth_etab" placeholder="Lycée..."></div>
-  <div class="fg"><label>Email</label><input type="email" id="auth_email2" placeholder="vous@exemple.fr"></div>
-  <div class="fg"><label>Mot de passe</label><input type="password" id="auth_pass2" placeholder="8 caractères minimum"></div>
-  <div id="auth-msg2" style="color:#c0392b;font-size:.75rem;min-height:16px;margin:4px 0"></div>
-  <button class="mb mb-p" style="width:100%;margin-top:8px" onclick="doSignUp()">Créer mon compte</button>
-  <p style="font-size:.68rem;color:var(--dim);margin-top:8px">En créant un compte, vous acceptez notre <button class="sb-ftl" onclick="openModal('privModal')">politique de confidentialité</button>.</p>
-</div>
+<div id="auth-zone"></div>
 </div></div></div>
 
 <!-- EVAL MODAL -->
@@ -1849,11 +2132,11 @@ function skipTime(){
   <button class="mb mb-p" onclick="openNewEvalForm()" style="font-size:.75rem;padding:5px 12px">＋ Nouvelle éval</button>
 </div>
 <div id="eval-new-form" style="display:none;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;padding:12px;margin-bottom:12px">
-  <div class="fg"><label>Titre de l'évaluation</label><input type="text" id="eval_titre" placeholder="Ex : Contrôle chapitre 3"></div>
+  <div class="fg"><label>Titre de l'évaluation</label><input autocomplete="off" type="text" id="eval_titre" placeholder="Ex : Contrôle chapitre 3"></div>
   <div class="tm-row">
     <div class="fg"><label>Classe</label><select id="eval_cls" onchange="updateEvalSubjList()" style="width:100%;padding:5px;border:1px solid var(--bd);border-radius:6px"></select></div>
     <div class="fg"><label>Matière</label><select id="eval_subj" style="width:100%;padding:5px;border:1px solid var(--bd);border-radius:6px"></select></div>
-    <div class="fg"><label>Date</label><input type="date" id="eval_date" style="padding:5px;border:1px solid var(--bd);border-radius:6px"></div>
+    <div class="fg"><label>Date</label><input autocomplete="off" type="date" id="eval_date" style="padding:5px;border:1px solid var(--bd);border-radius:6px"></div>
   </div>
   <div style="margin:8px 0"><label style="font-size:.72rem;font-weight:700;color:var(--dim)">Notions évaluées (optionnel)</label></div>
   <div id="eval-items-list" style="max-height:160px;overflow-y:auto;font-size:.75rem"></div>
@@ -1873,6 +2156,8 @@ function skipTime(){
 <button class="mb mb-p" style="width:100%;margin-bottom:8px" onclick="window._SB&&window._SB.exportData()">📥 Exporter mes données (JSON)</button>
 <hr style="margin:12px 0;border-color:var(--bd)">
 <p style="font-size:.75rem;color:var(--dim);margin-bottom:8px">La suppression de votre compte efface définitivement toutes vos données de nos serveurs.</p>
+<hr style="margin:12px 0;border-color:var(--bd)">
+<div id="compte-mdp-zone"></div>
 <button class="mb" style="width:100%;background:#c0392b;color:#fff;border:none" onclick="window._SB&&window._SB.deleteAccount()">🗑️ Supprimer mon compte</button>
 </div></div></div>
 
@@ -1890,41 +2175,12 @@ function skipTime(){
     <span style="font-size:1.2rem">🗂️</span>
     <div><div style="font-weight:700;font-size:.8rem">Mes Projets</div><div style="font-size:.72rem;color:var(--dim)">Portfolio & ressources pédagogiques</div></div>
   </a>
-  <a href="mailto:tom.rougeaud.education@gmail.com" style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--sf2);border:1px solid var(--bd);border-radius:8px;text-decoration:none;color:var(--txt)">
-    <span style="font-size:1.2rem">📧</span>
-    <div><div style="font-weight:700;font-size:.8rem">Email</div><div style="font-size:.72rem;color:var(--dim)">tom.rougeaud.education@gmail.com</div></div>
-  </a>
 </div>
-<p style="font-size:.7rem;color:var(--dim);margin-top:12px">Pour signaler un bug ou proposer une amélioration, utilisez LinkedIn ou email.</p>
+<p style="font-size:.7rem;color:var(--dim);margin-top:12px">Pour signaler un bug ou proposer une amélioration, utilisez LinkedIn.</p>
 </div></div></div>
 
 <!-- AUTH + EVAL JS HELPERS -->
 <script>
-function showAuthTab(tab){
-  document.getElementById('auth-form-in').style.display=tab==='in'?'block':'none';
-  document.getElementById('auth-form-up').style.display=tab==='up'?'block':'none';
-  var inBtn=document.getElementById('auth-tab-in');var upBtn=document.getElementById('auth-tab-up');
-  inBtn.style.background=tab==='in'?'var(--m)':'none';inBtn.style.color=tab==='in'?'#fff':'var(--dim)';inBtn.style.borderColor=tab==='in'?'var(--m)':'var(--bd)';
-  upBtn.style.background=tab==='up'?'var(--m)':'none';upBtn.style.color=tab==='up'?'#fff':'var(--dim)';upBtn.style.borderColor=tab==='up'?'var(--m)':'var(--bd)';
-}
-async function doSignIn(){
-  var e=document.getElementById('auth_email').value.trim();
-  var p=document.getElementById('auth_pass').value;
-  var msg=document.getElementById('auth-msg');
-  msg.textContent='Connexion...';
-  var err=await window._SB.signIn(e,p);
-  if(err){msg.textContent=err;}else{msg.textContent='';closeModal('authModal');}
-}
-async function doSignUp(){
-  var nom=document.getElementById('auth_nom').value.trim();
-  var etab=document.getElementById('auth_etab').value.trim();
-  var e=document.getElementById('auth_email2').value.trim();
-  var p=document.getElementById('auth_pass2').value;
-  var msg=document.getElementById('auth-msg2');
-  msg.textContent='Création...';
-  var err=await window._SB.signUp(e,p,nom,etab);
-  if(err){msg.textContent=err;}else{msg.textContent='✅ Compte créé ! Vérifiez votre email.';setTimeout(function(){closeModal('authModal');},2000);}
-}
 function openNewEvalForm(){
   var form=document.getElementById('eval-new-form');
   form.style.display='block';
@@ -1952,7 +2208,7 @@ function refreshEvalItemsList(){
     h+='<div style="font-weight:700;margin:4px 0 2px">'+safeHtml(d.label||d.id)+'</div>';
     getModules(cid,sid,d.id).forEach(function(mod){
       iterN(cid,sid,d.id,mod,function(key,nm){
-        h+='<label style="display:flex;align-items:center;gap:5px;margin-bottom:2px"><input type="checkbox" class="eval-item-cb" value="'+key+'"> '+safeHtml(nm)+'</label>';
+        h+='<label style="display:flex;align-items:center;gap:5px;margin-bottom:2px"><input autocomplete="off" type="checkbox" class="eval-item-cb" value="'+key+'"> '+safeHtml(nm)+'</label>';
       });
     });
   });
@@ -1997,43 +2253,11 @@ var _origOpenModal=window.openModal;
 window.openModal=function(id){
   _origOpenModal(id);
   if(id==='evalModal')loadAndShowEvals();
-  if(id==='authModal')showAuthTab('in');
+  if(id==='authModal')window._Compte.ouvrirConnexion();
+  if(id==='accountModal')window._Compte.ouvrirMdp();
 };
 </script>
 
-
-<script>
-function gateTab(tab){
-  document.getElementById('gate-form-in').style.display=tab==='in'?'block':'none';
-  document.getElementById('gate-form-up').style.display=tab==='up'?'block':'none';
-  document.getElementById('gtab-in').className='gate-tab'+(tab==='in'?' active':'');
-  document.getElementById('gtab-up').className='gate-tab'+(tab==='up'?' active':'');
-}
-async function doGateSignIn(){
-  var e=document.getElementById('g_email').value.trim();
-  var p=document.getElementById('g_pass').value;
-  var msg=document.getElementById('gate-msg-in');
-  msg.className='gate-msg err';msg.textContent='Connexion en cours…';
-  var err=await window._SB.signIn(e,p);
-  if(err){msg.textContent=err;}else{msg.textContent='';}
-}
-async function doGateSignUp(){
-  var nom=document.getElementById('g_nom').value.trim();
-  var etab=document.getElementById('g_etab').value.trim();
-  var e=document.getElementById('g_email2').value.trim();
-  var p=document.getElementById('g_pass2').value;
-  var msg=document.getElementById('gate-msg-up');
-  msg.className='gate-msg err';msg.textContent='Création en cours…';
-  var err=await window._SB.signUp(e,p,nom,etab);
-  if(err){msg.textContent=err;}
-  else{msg.className='gate-msg ok';msg.textContent='✅ Compte créé ! Vérifiez votre email puis connectez-vous.';setTimeout(function(){gateTab('in');},2500);}
-}
-function openPrivFromGate(){
-  // Show priv modal on top of gate
-  var m=document.getElementById('privModal');
-  if(m){m.style.display='flex';m.style.zIndex='3000';}
-}
-</script>
 
 </body>
 </html>
